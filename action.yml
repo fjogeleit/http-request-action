@@ -1,0 +1,37 @@
+name: 'HTTP Request Action'
+description: 'Create any HTTP Request'
+inputs:
+    url:
+        description: 'Request URL'
+        required: true
+    method:
+        description: 'Request Method'
+        required: false
+        default: 'POST'
+    contentType:
+        description: 'Content Type'
+        required: false
+        default: 'application/json'
+    data:
+        description: 'Request Body as JSON String'
+        required: false
+        default: '{}'
+    username:
+        description: 'Auth Username'
+        required: false
+    password:
+        description: 'Auth Password'
+        required: false
+    timeout:
+        description: 'Request Timeout in Sec'
+        required: false
+        default: '5000'
+    bearerToken:
+        description: 'Bearer Authentication Token'
+        required: false
+outputs:
+    response:
+        description: 'HTTP Response Content'
+runs:
+    using: 'node12'
+    main: 'dist/index.js'
