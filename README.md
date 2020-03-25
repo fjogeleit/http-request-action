@@ -27,6 +27,7 @@ jobs:
 |username| Username for Basic Auth ||
 |password| Password for Basic Auth ||
 |bearerToken| Bearer Authentication Token (without Bearer Prefix) ||
+|customHeaders| Additional header values as JSON string, keys in this object overwrite default headers like Content-Type |'{}'|
 
 ### Output
 

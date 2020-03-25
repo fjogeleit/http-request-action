@@ -2,6 +2,16 @@ const core = require("@actions/core");
 const axios = require("axios");
 
 const auth = {}
+let customHeaders = {}
+
+if (!!core.getInput('customHeaders')) {
+  try {
+    customHeaders = JSON.parse(core.getInput('customHeaders'));
+  } catch(error) {
+    core.error('Could not parse customHeaders string value')
+  }
+}
+
 const headers = { 'Content-Type': core.getInput('contentType') || 'application/json' }
 
 if (!!core.getInput('username')) {
@@ -19,7 +29,7 @@ if (!!core.getInput('bearerToken')) {
 const instance = axios.create({
   baseURL: core.getInput('url', { required: true }),
   timeout: parseInt(core.getInput('timeout') || 5000, 10),
-  headers
+  headers: { ...headers, ...customHeaders }
 });
 
 
