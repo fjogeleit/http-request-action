@@ -15,3 +15,10 @@ jobs:
         with:
           url: 'https://postman-echo.com/get'
           method: 'GET'
+      
+      - name: Request Postment Echo POST
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          method: 'POST'
+          data: '{ "key": "value" }'
