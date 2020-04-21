@@ -27,6 +27,6 @@ jobs:
         uses: ./
         with:
           url: 'https://postman-echo.com/basic-auth'
-          method: 'POST'
+          method: 'GET'
           username: 'postman'
           password: 'password'
