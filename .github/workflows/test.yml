@@ -10,8 +10,8 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Request Google Test
+      - name: Request Postment Echo GET
         uses: ./
         with:
-          url: 'https://google.de'
+          url: 'https://postman-echo.com/get'
           method: 'GET'

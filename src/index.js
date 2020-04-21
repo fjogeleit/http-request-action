@@ -1,6 +1,9 @@
 const core = require("@actions/core");
 const axios = require("axios");
 
+const METHOD_GET = 'GET'
+const METHOD_POST = 'POST'
+
 let auth = undefined
 let customHeaders = {}
 
@@ -39,10 +42,13 @@ const instance = axios.create(instanceConfig);
 
 (async() => {
   try {
+    const method = core.getInput('method') || METHOD_POST;
+    const data = method === METHOD_GET ? undefined : JSON.parse(core.getInput('data') || '{}')
+
     const requestData = {
       auth,
-      method: core.getInput('method') || 'POST',
-      data: JSON.parse(core.getInput('data') || '{}')
+      method,
+      data
     }
 
     core.debug(JSON.stringify(requestData))
