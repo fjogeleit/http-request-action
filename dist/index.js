@@ -2597,6 +2597,9 @@ module.exports = function httpAdapter(config) {
 const core = __webpack_require__(470);
 const axios = __webpack_require__(53);
 
+const METHOD_GET = 'GET'
+const METHOD_POST = 'POST'
+
 let auth = undefined
 let customHeaders = {}
 
@@ -2629,19 +2632,22 @@ const instanceConfig = {
   headers: { ...headers, ...customHeaders }
 }
 
-core.debug(JSON.stringify(instanceConfig))
+core.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
 
 const instance = axios.create(instanceConfig);
 
 (async() => {
   try {
+    const method = core.getInput('method') || METHOD_POST;
+    const data = method === METHOD_GET ? undefined : JSON.parse(core.getInput('data') || '{}')
+
     const requestData = {
       auth,
-      method: core.getInput('method') || 'POST',
-      data: JSON.parse(core.getInput('data') || '{}')
+      method,
+      data
     }
 
-    core.debug(JSON.stringify(requestData))
+    core.debug('Request Data: ' + JSON.stringify(requestData))
 
     const response = await instance.request(requestData)
 

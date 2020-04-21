@@ -32,3 +32,11 @@ jobs:
 ### Output
 
 - `response` Request Response as JSON String
+
+
+### Debug Informations
+
+Enable Debug mode to get informations about
+
+- Instance Configuration (Url / Timeout / Headers)
+- Request Data (Body / Auth / Method)
