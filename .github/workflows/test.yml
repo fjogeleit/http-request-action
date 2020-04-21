@@ -22,3 +22,11 @@ jobs:
           url: 'https://postman-echo.com/post'
           method: 'POST'
           data: '{ "key": "value" }'
+      
+      - name: Request Postment Echo BasicAuth
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/basic-auth'
+          method: 'POST'
+          username: 'postman'
+          password: 'password'
