@@ -2632,7 +2632,7 @@ const instanceConfig = {
   headers: { ...headers, ...customHeaders }
 }
 
-core.debug(JSON.stringify(instanceConfig))
+core.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
 
 const instance = axios.create(instanceConfig);
 
@@ -2647,7 +2647,7 @@ const instance = axios.create(instanceConfig);
       data
     }
 
-    core.debug(JSON.stringify(requestData))
+    core.debug('Request Data: ' + JSON.stringify(requestData))
 
     const response = await instance.request(requestData)
 
