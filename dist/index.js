@@ -2623,7 +2623,7 @@ if (!!core.getInput('username') || !!core.getInput('password')) {
 }
 
 if (!!core.getInput('bearerToken')) {
-  headers['Authentication'] = `Bearer ${core.getInput('bearerToken')}`;
+  headers['Authorization'] = `Bearer ${core.getInput('bearerToken')}`;
 }
 
 const instanceConfig = {
