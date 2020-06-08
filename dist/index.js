@@ -2653,7 +2653,17 @@ const instance = axios.create(instanceConfig);
 
     core.setOutput('response', JSON.stringify(response.data))
   } catch (error) {
-    core.setFailed(JSON.stringify({ code: error.response.code, message: error.response.data }))
+    if (error.toJSON) {
+      core.setOutput(error.toJSON());
+    }
+
+    if (error.response) {
+      core.setFailed(JSON.stringify({ code: error.response.code, message: error.response.data }))
+    } else if (error.request) {
+      core.setFailed(JSON.stringify({ error: "no response received" }));
+    } else {
+      core.setFailed(error.message);
+    }
   }
 })()
 
