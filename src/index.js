@@ -57,8 +57,10 @@ const instance = axios.create(instanceConfig);
 
     core.setOutput('response', JSON.stringify(response.data))
   } catch (error) {
-    core.setOutput(error.toJSON());
-    
+    if (error.toJSON) {
+      core.setOutput(error.toJSON());
+    }
+
     if (error.response) {
       core.setFailed(JSON.stringify({ code: error.response.code, message: error.response.data }))
     } else if (error.request) {
