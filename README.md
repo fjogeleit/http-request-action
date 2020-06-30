@@ -2,7 +2,7 @@
 
 Create any kind of HTTP Requests in your GitHub actions to trigger Tools like Ansible AWX
 
-Exmaple Usage:
+Example Usage:
 ```
 jobs:
     deployment
