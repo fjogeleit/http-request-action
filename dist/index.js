@@ -2654,7 +2654,7 @@ const instance = axios.create(instanceConfig);
     core.setOutput('response', JSON.stringify(response.data))
   } catch (error) {
     if (error.toJSON) {
-      core.setOutput(error.toJSON());
+      core.setOutput(JSON.stringify(error.toJSON()));
     }
 
     if (error.response) {
