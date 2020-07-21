@@ -29,6 +29,9 @@ inputs:
     bearerToken:
         description: 'Bearer Authentication Token'
         required: false
+    customHeaders:
+        description: 'Custom HTTP Headers'
+        required: false
 outputs:
     response:
         description: 'HTTP Response Content'
