@@ -1,8 +1,6 @@
 const core = require("@actions/core");
-const axios = require("axios");
-
-const METHOD_GET = 'GET'
-const METHOD_POST = 'POST'
+const { request, METHOD_POST } = require('./httpClient');
+const { GithubActions } = require('./githubActions');
 
 let auth = undefined
 let customHeaders = {}
@@ -38,35 +36,8 @@ const instanceConfig = {
 
 core.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
 
-const instance = axios.create(instanceConfig);
+const data = core.getInput('data') || '{}';
+const method = core.getInput('method') || METHOD_POST;
+const preventFailureOnNoResponse = core.getInput('preventFailureOnNoResponse') === 'true';
 
-(async() => {
-  try {
-    const method = core.getInput('method') || METHOD_POST;
-    const data = method === METHOD_GET ? undefined : JSON.parse(core.getInput('data') || '{}')
-
-    const requestData = {
-      auth,
-      method,
-      data
-    }
-
-    core.debug('Request Data: ' + JSON.stringify(requestData))
-
-    const response = await instance.request(requestData)
-
-    core.setOutput('response', JSON.stringify(response.data))
-  } catch (error) {
-    if (error.toJSON) {
-      core.setOutput(JSON.stringify(error.toJSON()));
-    }
-
-    if (error.response) {
-      core.setFailed(JSON.stringify({ code: error.response.code, message: error.response.data }))
-    } else if (error.request) {
-      core.setFailed(JSON.stringify({ error: "no response received" }));
-    } else {
-      core.setFailed(error.message);
-    }
-  }
-})()
+request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, actions: new GithubActions() })

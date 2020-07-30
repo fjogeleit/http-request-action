@@ -1199,6 +1199,52 @@ module.exports = function xhrAdapter(config) {
 
 /***/ }),
 
+/***/ 230:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const core = __webpack_require__(470);
+
+class GithubActions {
+  debug(message) {
+    core.debug(message)
+  }
+
+  warning(message) {
+    core.warning(message)
+  }
+
+  setOutput(name, output) {
+    core.setOutput(name, output)
+  }
+
+  setFailed(message) {
+    core.setFailed(message)
+  }
+}
+
+class LogActions {
+  debug(message) {
+    console.info(message)
+  }
+
+  warning(message) {
+    console.warn(message)
+  }
+
+  setOutput(name, output) {
+    console.log(name, output)
+  }
+
+  setFailed(message) {
+    console.error(message)
+  }
+}
+
+module.exports = { GithubActions, LogActions }
+
+
+/***/ }),
+
 /***/ 283:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -1320,6 +1366,57 @@ module.exports.default = axios;
 
 /***/ }),
 
+/***/ 354:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const axios = __webpack_require__(53);
+
+const METHOD_GET = 'GET'
+const METHOD_POST = 'POST'
+
+const request = async({ method, instanceConfig, data, auth, actions, preventFailureOnNoResponse }) => {
+  try {
+    const instance = axios.create(instanceConfig);
+
+    const jsonData = method === METHOD_GET ? undefined : JSON.parse(data)
+
+    const requestData = {
+      auth,
+      method,
+      data: jsonData
+    }
+
+    actions.debug('Request Data: ' + JSON.stringify(requestData))
+
+    const response = await instance.request(requestData)
+
+    actions.setOutput('response', JSON.stringify(response.data))
+  } catch (error) {
+    if (error.toJSON) {
+      actions.setOutput(JSON.stringify(error.toJSON()));
+    }
+
+    if (error.response) {
+      actions.setFailed(JSON.stringify({ code: error.response.code, message: error.response.data }))
+    } else if (error.request && !preventFailureOnNoResponse) {
+      actions.setFailed(JSON.stringify({ error: "no response received" }));
+    } else if (error.request && preventFailureOnNoResponse) {
+      actions.warning(JSON.stringify(error));
+    } else {
+      actions.setFailed(error.message);
+    }
+  }
+}
+
+module.exports = {
+  request,
+  METHOD_POST,
+  METHOD_GET,
+}
+
+
+/***/ }),
+
 /***/ 357:
 /***/ (function(module) {
 
@@ -1330,7 +1427,7 @@ module.exports = require("assert");
 /***/ 361:
 /***/ (function(module) {
 
-module.exports = {"_from":"axios","_id":"axios@0.19.2","_inBundle":false,"_integrity":"sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"tag","registry":true,"raw":"axios","name":"axios","escapedName":"axios","rawSpec":"","saveSpec":null,"fetchSpec":"latest"},"_requiredBy":["#USER","/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.19.2.tgz","_shasum":"3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27","_spec":"axios","_where":"/Users/f.jogeleit/Workspace/Other/http-request-action","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"1.5.10"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"bundlesize":"^0.17.0","coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.0.2","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^20.1.0","grunt-karma":"^2.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^1.0.18","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^1.3.0","karma-chrome-launcher":"^2.2.0","karma-coverage":"^1.1.1","karma-firefox-launcher":"^1.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-opera-launcher":"^1.0.0","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^1.2.0","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^1.7.0","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^5.2.0","sinon":"^4.5.0","typescript":"^2.8.1","url-search-params":"^0.10.0","webpack":"^1.13.1","webpack-dev-server":"^1.14.1"},"homepage":"https://github.com/axios/axios","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test && bundlesize","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","version":"0.19.2"};
+module.exports = {"_args":[["axios@0.19.2","/Users/frankjogeleit/Workspace/http-request-action"]],"_from":"axios@0.19.2","_id":"axios@0.19.2","_inBundle":false,"_integrity":"sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.19.2","name":"axios","escapedName":"axios","rawSpec":"0.19.2","saveSpec":null,"fetchSpec":"0.19.2"},"_requiredBy":["/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.19.2.tgz","_spec":"0.19.2","_where":"/Users/frankjogeleit/Workspace/http-request-action","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"1.5.10"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"bundlesize":"^0.17.0","coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.0.2","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^20.1.0","grunt-karma":"^2.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^1.0.18","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^1.3.0","karma-chrome-launcher":"^2.2.0","karma-coverage":"^1.1.1","karma-firefox-launcher":"^1.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-opera-launcher":"^1.0.0","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^1.2.0","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^1.7.0","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^5.2.0","sinon":"^4.5.0","typescript":"^2.8.1","url-search-params":"^0.10.0","webpack":"^1.13.1","webpack-dev-server":"^1.14.1"},"homepage":"https://github.com/axios/axios","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test && bundlesize","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","version":"0.19.2"};
 
 /***/ }),
 
@@ -2595,10 +2692,8 @@ module.exports = function httpAdapter(config) {
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const core = __webpack_require__(470);
-const axios = __webpack_require__(53);
-
-const METHOD_GET = 'GET'
-const METHOD_POST = 'POST'
+const { request, METHOD_POST } = __webpack_require__(354);
+const { GithubActions } = __webpack_require__(230);
 
 let auth = undefined
 let customHeaders = {}
@@ -2634,38 +2729,11 @@ const instanceConfig = {
 
 core.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
 
-const instance = axios.create(instanceConfig);
+const data = core.getInput('data') || '{}';
+const method = core.getInput('method') || METHOD_POST;
+const preventFailureOnNoResponse = core.getInput('preventFailureOnNoResponse') === 'true';
 
-(async() => {
-  try {
-    const method = core.getInput('method') || METHOD_POST;
-    const data = method === METHOD_GET ? undefined : JSON.parse(core.getInput('data') || '{}')
-
-    const requestData = {
-      auth,
-      method,
-      data
-    }
-
-    core.debug('Request Data: ' + JSON.stringify(requestData))
-
-    const response = await instance.request(requestData)
-
-    core.setOutput('response', JSON.stringify(response.data))
-  } catch (error) {
-    if (error.toJSON) {
-      core.setOutput(JSON.stringify(error.toJSON()));
-    }
-
-    if (error.response) {
-      core.setFailed(JSON.stringify({ code: error.response.code, message: error.response.data }))
-    } else if (error.request) {
-      core.setFailed(JSON.stringify({ error: "no response received" }));
-    } else {
-      core.setFailed(error.message);
-    }
-  }
-})()
+request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, actions: new GithubActions() })
 
 
 /***/ }),
