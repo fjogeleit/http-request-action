@@ -29,6 +29,9 @@ inputs:
     bearerToken:
         description: 'Bearer Authentication Token'
         required: false
+    customHeaders:
+        description: 'Custom HTTP Headers'
+        required: false
     preventFailureOnNoResponse:
         description: 'Prevent this Action to fail if the request respond without an response'
         required: false
