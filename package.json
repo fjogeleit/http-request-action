@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/fjogeleit/http-request-action#readme",
   "devDependencies": {
-    "@actions/core": "^1.2.2"
+    "@actions/core": "^1.2.6"
   },
   "dependencies": {
     "@zeit/ncc": "^0.21.1",
