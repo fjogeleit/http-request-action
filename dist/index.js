@@ -1027,7 +1027,7 @@ const request = async({ method, instanceConfig, data, auth, actions, preventFail
   try {
     const instance = axios.create(instanceConfig);
 
-    const jsonData = method === METHOD_GET ? undefined : JSON.parse(data)
+    const jsonData = method === METHOD_GET ? undefined : JSON.parse(data.replace(/\\n/g, '\n'))
 
     const requestData = {
       auth,
