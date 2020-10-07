@@ -32,7 +32,7 @@ jobs:
           data: >-
             {
               "key":"multi line\ntest
-              text",
+              text"
             }
       
       - name: Request Postment Echo BasicAuth
