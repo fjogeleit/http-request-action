@@ -23,6 +23,19 @@ jobs:
           method: 'POST'
           data: '{ "key": "value" }'
       
+      - name: Request Postment Echo POST
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          method: 'POST'
+          data: >-
+            {
+              "key":"${TEXT}",
+            }
+        env:
+            TEXT: "multi line\ntest
+            text"
+      
       - name: Request Postment Echo BasicAuth
         uses: ./
         with:
