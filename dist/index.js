@@ -1052,7 +1052,7 @@ const request = async({ method, instanceConfig, data, auth, actions, preventFail
     } else if (error.request && preventFailureOnNoResponse) {
       actions.warning(JSON.stringify(error));
     } else {
-      actions.setFailed(error.message);
+      actions.setFailed(JSON.stringify({ message: error.message, data }));
     }
   }
 }
