@@ -1023,16 +1023,15 @@ const axios = __webpack_require__(53);
 const METHOD_GET = 'GET'
 const METHOD_POST = 'POST'
 
-const request = async({ method, instanceConfig, data, auth, actions, preventFailureOnNoResponse }) => {
+const request = async({ method, instanceConfig, data, auth, actions, preventFailureOnNoResponse, escapeData }) => {
   try {
     const instance = axios.create(instanceConfig);
 
-    data = data
-      .replace(/\\n/g, "\\n")  
-      .replace(/\\r/g, "\\r")
-      .replace(/\\t/g, "\\t")
-      .replace(/\\b/g, "\\b")
-      .replace(/\\f/g, "\\f")
+    if (escapeData) {
+      data = data.replace(/"[^"]*"/g, (match) => { 
+          return match.replace(/[\n\r]\s*/g, "\\n");
+      }); 
+    }
 
     const jsonData = method === METHOD_GET ? undefined : JSON.parse(data)
 
@@ -1059,7 +1058,7 @@ const request = async({ method, instanceConfig, data, auth, actions, preventFail
     } else if (error.request && preventFailureOnNoResponse) {
       actions.warning(JSON.stringify(error));
     } else {
-      actions.setFailed(JSON.stringify({ message: error.message, data }));
+      actions.setFailed(JSON.stringify(error.message));
     }
   }
 }
@@ -2619,8 +2618,9 @@ core.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
 const data = core.getInput('data') || '{}';
 const method = core.getInput('method') || METHOD_POST;
 const preventFailureOnNoResponse = core.getInput('preventFailureOnNoResponse') === 'true';
+const escapeData = core.getInput('escapeData') === 'true';
 
-request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, actions: new GithubActions() })
+request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, actions: new GithubActions() })
 
 
 /***/ }),

@@ -28,6 +28,7 @@ jobs:
         with:
           url: 'https://postman-echo.com/post'
           method: 'POST'
+          escapeData: 'true'
           data: >-
             {
               "key":"multi line\ntest

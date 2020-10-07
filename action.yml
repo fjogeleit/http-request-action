@@ -35,6 +35,9 @@ inputs:
     preventFailureOnNoResponse:
         description: 'Prevent this Action to fail if the request respond without an response'
         required: false
+    escapeData:
+        description: 'Escape newlines in data string content'
+        required: false
 outputs:
     response:
         description: 'HTTP Response Content'
