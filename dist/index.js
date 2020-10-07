@@ -1027,7 +1027,12 @@ const request = async({ method, instanceConfig, data, auth, actions, preventFail
   try {
     const instance = axios.create(instanceConfig);
 
-    data = data.replace(/\\n/g, '\n');
+    data = data
+      .replace(/\\n/g, "\\n")  
+      .replace(/\\r/g, "\\r")
+      .replace(/\\t/g, "\\t")
+      .replace(/\\b/g, "\\b")
+      .replace(/\\f/g, "\\f")
 
     const jsonData = method === METHOD_GET ? undefined : JSON.parse(data)
 
