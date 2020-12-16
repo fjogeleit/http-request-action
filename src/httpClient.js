@@ -13,12 +13,14 @@ const request = async({ method, instanceConfig, data, auth, actions, preventFail
       }); 
     }
 
-    const jsonData = method === METHOD_GET ? undefined : JSON.parse(data)
+    if (method === METHOD_GET) {
+      data = undefined;
+    }
 
     const requestData = {
       auth,
       method,
-      data: jsonData
+      data
     }
 
     actions.debug('Request Data: ' + JSON.stringify(requestData))

@@ -22,7 +22,7 @@
     "@actions/core": "^1.2.6"
   },
   "dependencies": {
-    "@zeit/ncc": "^0.21.1",
-    "axios": "^0.20.0"
+    "@zeit/ncc": "^0.22",
+    "axios": "^0.21"
   }
 }
