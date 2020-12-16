@@ -23,7 +23,7 @@ jobs:
           method: 'POST'
           data: '{ "key": "value" }'
       
-      - name: Request Postment Echo POST
+      - name: Request Postment Echo POST with Unescaped Newline
         uses: ./
         with:
           url: 'https://postman-echo.com/post'
