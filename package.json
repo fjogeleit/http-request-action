@@ -1,6 +1,6 @@
 {
   "name": "http-request-action",
-  "version": "1.4.2",
+  "version": "1.6.1",
   "description": "",
   "main": "src/index.js",
   "private": false,
@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "@zeit/ncc": "^0.22",
-    "axios": "^0.21"
+    "axios": "^0.21.1"
   }
 }
