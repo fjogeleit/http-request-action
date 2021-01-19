@@ -5,14 +5,16 @@ Create any kind of HTTP Requests in your GitHub actions to trigger Tools like An
 Example Usage:
 ```
 jobs:
-    deployment
-        - name: Deploy Stage
-            uses: fjogeleit/http-request-action@master
-            with:
-                url: 'https://ansible.io/api/v2/job_templates/84/launch/'
-                method: 'POST'
-                username: ${{ secrets.AWX_USER }}
-                password: ${{ secrets.AWX_PASSWORD }}
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy Stage
+      uses: fjogeleit/http-request-action@master
+      with:
+        url: 'https://ansible.io/api/v2/job_templates/84/launch/'
+        method: 'POST'
+        username: ${{ secrets.AWX_USER }}
+        password: ${{ secrets.AWX_PASSWORD }}
 ```
 
 ### Input Arguments
