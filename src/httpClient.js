@@ -24,8 +24,13 @@ const request = async({ method, instanceConfig, data, files, auth, actions, prev
       dataJson = convertToJSON(data)
 
       if (Object.keys(filesJson).length > 0) {
-        data = convertToFormData(dataJson, filesJson, actions)
-        instanceConfig = await updateConfig(instanceConfig, data, actions)
+        try {
+          data = convertToFormData(dataJson, filesJson)
+          instanceConfig = await updateConfig(instanceConfig, data, actions)
+        } catch(error) {
+          actions.setFailed({ message: `Unable to convert Data and Files into FormData: ${error.message}`, data: dataJson, files: filesJson })
+          return
+        }
       }
     }
 
@@ -65,22 +70,18 @@ const convertToJSON = (value) => {
   }
 }
 
-const convertToFormData = (data, files, actions) => {
+const convertToFormData = (data, files) => {
   formData = new FormData()
 
-  try {
-    for (const [key, value] of Object.entries(data)) {
-      formData.append(key, value)
-    }
-
-    for (const [key, value] of Object.entries(files)) {
-      formData.append(key, fs.createReadStream(value))
-    }
-
-    return formData
-  } catch (error) {
-    actions.setFailed({ message: `Unable to convert Data and Files into FormData: ${error.message}`, data, files })
+  for (const [key, value] of Object.entries(data)) {
+    formData.append(key, value)
   }
+
+  for (const [key, value] of Object.entries(files)) {
+    formData.append(key, fs.createReadStream(value))
+  }
+
+  return formData
 }
 
 const updateConfig = async (instanceConfig, formData, actions) => {
