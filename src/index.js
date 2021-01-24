@@ -37,8 +37,9 @@ const instanceConfig = {
 core.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
 
 const data = core.getInput('data') || '{}';
+const files = core.getInput('files') || '{}';
 const method = core.getInput('method') || METHOD_POST;
 const preventFailureOnNoResponse = core.getInput('preventFailureOnNoResponse') === 'true';
 const escapeData = core.getInput('escapeData') === 'true';
 
-request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, actions: new GithubActions() })
+request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, files, actions: new GithubActions() })

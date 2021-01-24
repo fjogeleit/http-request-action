@@ -1,9 +1,10 @@
 const axios = require("axios");
+const FormData = require('form-data')
 
 const METHOD_GET = 'GET'
 const METHOD_POST = 'POST'
 
-const request = async({ method, instanceConfig, data, auth, actions, preventFailureOnNoResponse, escapeData }) => {
+const request = async({ method, instanceConfig, data, files, auth, actions, preventFailureOnNoResponse, escapeData }) => {
   try {
     const instance = axios.create(instanceConfig);
 
@@ -15,6 +16,16 @@ const request = async({ method, instanceConfig, data, auth, actions, preventFail
 
     if (method === METHOD_GET) {
       data = undefined;
+    }
+
+    if (files && files !== '{}') {
+      filesJson = convertToJSON(files)
+      dataJson = convertToJSON(data)
+
+      if (Object.keys(filesJson).length > 0) {
+        data = convertToFormData(dataJson, filesJson, actions)
+        instanceConfig = await updateConfig(instanceConfig, data, actions)
+      }
     }
 
     const requestData = {
@@ -44,6 +55,58 @@ const request = async({ method, instanceConfig, data, auth, actions, preventFail
     }
   }
 }
+
+const convertToJSON = (value) => {
+  try {
+    return JSON.parse(value)
+  } catch(e) {
+    return {}
+  }
+}
+
+const convertToFormData = (data, files, actions) => {
+  formData = new FormData()
+
+  try {
+    for (const [key, value] of Object.entries(data)) {
+      formData.append(key, value)
+    }
+
+    for (const [key, value] of Object.entries(files)) {
+      formData.append(key, fs.createReadStream(value))
+    }
+
+    return formData
+  } catch (error) {
+    actions.setFailed({ message: `Unable to convert Data and Files into FormData: ${error.message}`, data, files })
+  }
+}
+
+const updateConfig = async (instanceConfig, formData, actions) => {
+  try {
+    return { 
+      ...instanceConfig, 
+      headers: { 
+        ...instanceConfig.headers, 
+        ...formData.getHeaders(), 
+        'Content-Length': await contentLength(formData) 
+      }
+    }
+  } catch(error) {
+    actions.setFailed({ message: `Unable to read Content-Length: ${error.message}`, data, files })
+  }
+}
+
+const contentLength = (formData) => new Promise((resolve, reject) => {
+  formData.getLength((err, length) => {
+    if (err) {
+      reject (err)
+      return
+    }
+
+    resolve(length)
+  })
+})
 
 module.exports = {
   request,
