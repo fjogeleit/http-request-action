@@ -34,8 +34,6 @@ const instanceConfig = {
   headers: { ...headers, ...customHeaders }
 }
 
-core.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
-
 const data = core.getInput('data') || '{}';
 const files = core.getInput('files') || '{}';
 const method = core.getInput('method') || METHOD_POST;

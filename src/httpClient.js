@@ -7,8 +7,6 @@ const METHOD_POST = 'POST'
 
 const request = async({ method, instanceConfig, data, files, auth, actions, preventFailureOnNoResponse, escapeData }) => {
   try {
-    const instance = axios.create(instanceConfig);
-
     if (escapeData) {
       data = data.replace(/"[^"]*"/g, (match) => { 
           return match.replace(/[\n\r]\s*/g, "\\n");
@@ -39,6 +37,10 @@ const request = async({ method, instanceConfig, data, files, auth, actions, prev
       method,
       data
     }
+
+    actions.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
+    
+    const instance = axios.create(instanceConfig);
 
     actions.debug('Request Data: ' + JSON.stringify(requestData))
 
@@ -86,12 +88,18 @@ const convertToFormData = (data, files) => {
 
 const updateConfig = async (instanceConfig, formData, actions) => {
   try {
+    const formHeaders = formData.getHeaders()
+    const contentType = formHeaders['content-type']
+
+    delete formHeaders['content-type']
+
     return { 
       ...instanceConfig, 
       headers: { 
         ...instanceConfig.headers, 
-        ...formData.getHeaders(), 
-        'Content-Length': await contentLength(formData) 
+        ...formHeaders,
+        'Content-Length': await contentLength(formData),
+        'Content-Type': contentType
       }
     }
   } catch(error) {
