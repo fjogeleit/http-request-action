@@ -1,5 +1,6 @@
 const axios = require("axios");
 const FormData = require('form-data')
+const fs = require('fs')
 
 const METHOD_GET = 'GET'
 const METHOD_POST = 'POST'
