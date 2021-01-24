@@ -42,3 +42,16 @@ jobs:
           method: 'GET'
           username: 'postman'
           password: 'password'
+      
+      - name: Create Test File
+        id: image
+        run: |
+          echo "test" > testfile.txt
+
+      - name: Request Postment Echo POST Multipart
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          method: 'POST'
+          data: '{ "key": "value" }'
+          files: '{ "file": "${{ github.workspace }}/testfile.txt" }'

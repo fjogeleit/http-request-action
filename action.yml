@@ -16,6 +16,10 @@ inputs:
         description: 'Request Body as JSON String'
         required: false
         default: '{}'
+    files:
+        description: 'Map of absolute file paths as JSON String'
+        required: false
+        default: '{}'
     username:
         description: 'Auth Username'
         required: false
