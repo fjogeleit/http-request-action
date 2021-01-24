@@ -23,7 +23,7 @@ jobs:
 |method  | Request Method| POST |
 |contentType  | Request ContentType| application/json |
 |data    | Request Body Content as JSON String, only for POST / PUT / PATCH Requests | '{}' |
-|files    | Map of key / absolute file paths send as multipart/form-data request to the API, if set the contentType is set to multipart/form-data, values provided by data will be added as additional FormData values, nested objects are not supported | '{}' |
+|files    | Map of key / absolute file paths send as multipart/form-data request to the API, if set the contentType is set to multipart/form-data, values provided by data will be added as additional FormData values, nested objects are not supported. **Example provided in the _test_ Workflow of this Action** | '{}' |
 |timeout| Request Timeout in ms | 5000 (5s) |
 |username| Username for Basic Auth ||
 |password| Password for Basic Auth ||
