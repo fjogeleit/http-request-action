@@ -1,6 +1,6 @@
 {
   "name": "http-request-action",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "",
   "main": "src/index.js",
   "private": false,
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/fjogeleit/http-request-action/issues"
   },
