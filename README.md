@@ -1,8 +1,8 @@
 # HTTP Request Action
 
-Create any kind of HTTP Requests in your GitHub actions to trigger Tools like Ansible AWX
+**Create HTTP Requests from GitHub Actions.** This action allows GitHub events to engage with tools like Ansible AWX that use HTTP APIs.
 
-Example Usage:
+### Example
 ```yaml
 jobs:
   deployment:
@@ -17,7 +17,7 @@ jobs:
         password: ${{ secrets.AWX_PASSWORD }}
 ```
 
-### Input Arguments
+### Request Configuration
 
 |Argument|  Description  |  Default  |
 |--------|---------------|-----------|
@@ -34,8 +34,7 @@ jobs:
 |preventFailureOnNoResponse| Prevent this Action to fail if the request respond without an response. Use 'true' (string) as value to enable it ||
 |escapeData| Escape newlines in data string content. Use 'true' (string) as value to enable it ||
 
-### Output
-
+### Response
 
 | Variable |  Description  |
 |---|---|
