@@ -1,9 +1,9 @@
 # HTTP Request Action
 
-Create any kind of HTTP Requests in your GitHub actions to trigger Tools like Ansible AWX
+**Create HTTP Requests from GitHub Actions.** This action allows GitHub events to engage with tools like Ansible AWX that use HTTP APIs.
 
-Example Usage:
-```
+### Example
+```yaml
 jobs:
   deployment:
     runs-on: ubuntu-latest
@@ -17,7 +17,7 @@ jobs:
         password: ${{ secrets.AWX_PASSWORD }}
 ```
 
-### Input Arguments
+### Request Configuration
 
 |Argument|  Description  |  Default  |
 |--------|---------------|-----------|
@@ -34,14 +34,29 @@ jobs:
 |preventFailureOnNoResponse| Prevent this Action to fail if the request respond without an response. Use 'true' (string) as value to enable it ||
 |escapeData| Escape newlines in data string content. Use 'true' (string) as value to enable it ||
 
-### Output
+### Response
 
-- `response` Request Response as JSON String
+| Variable |  Description  |
+|---|---|
+`response` | Response as JSON String
 
+To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`
 
-### Debug Informations
+```yaml
+steps:
+  - name: Make Request
+    id: myRequest
+    uses: fjogeleit/http-request-action@master
+    with:
+      url: "http://yoursite.com/api"
+  - name: Show Response
+    run: echo ${{ steps.myRequest.outputs.response }}
+```
 
-Enable Debug mode to get informations about
+### Additional Information
 
+Additional information is available if debug logging is enabled:
 - Instance Configuration (Url / Timeout / Headers)
 - Request Data (Body / Auth / Method)
+
+To [enable debug logging in GitHub Actions](https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging) create a secret `ACTIONS_RUNNER_DEBUG` with a value of `true`
