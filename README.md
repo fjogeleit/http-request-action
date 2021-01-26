@@ -36,8 +36,23 @@ jobs:
 
 ### Output
 
-- `response` Request Response as JSON String
 
+| Variable |  Description  |
+|---|---|
+`response` | Response as JSON String
+
+To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`
+
+```
+steps:
+  - name: Make Request
+    id: myRequest
+    uses: fjogeleit/http-request-action@master
+    with:
+      url: "http://yoursite.com/api"
+  - name: Show Response
+    run: echo ${{ steps.myRequest.outputs.response }}
+```
 
 ### Additional Information
 
