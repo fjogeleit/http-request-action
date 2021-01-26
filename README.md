@@ -3,7 +3,7 @@
 Create any kind of HTTP Requests in your GitHub actions to trigger Tools like Ansible AWX
 
 Example Usage:
-```
+```yaml
 jobs:
   deployment:
     runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
 
 To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`
 
-```
+```yaml
 steps:
   - name: Make Request
     id: myRequest
