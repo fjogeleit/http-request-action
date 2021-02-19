@@ -9,7 +9,7 @@ const request = async({ method, instanceConfig, data, files, auth, actions, prev
   try {
     if (escapeData) {
       data = data.replace(/"[^"]*"/g, (match) => { 
-          return match.replace(/[\n\r]\s*/g, "\\n");
+        return match.replace(/[\n\r]\s*/g, "\\n");
       }); 
     }
 
@@ -35,7 +35,9 @@ const request = async({ method, instanceConfig, data, files, auth, actions, prev
     const requestData = {
       auth,
       method,
-      data
+      data,
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity
     }
 
     actions.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
