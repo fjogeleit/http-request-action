@@ -43,6 +43,13 @@ jobs:
           username: 'postman'
           password: 'password'
       
+      - name: Request Postment Echo with 404 Response and ignore failure code
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/status/404'
+          method: 'GET'
+          ignoreStatusCodes: '404'
+      
       - name: Create Test File
         id: image
         run: |
