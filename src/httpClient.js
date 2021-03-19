@@ -65,7 +65,7 @@ const request = async({ method, instanceConfig, data, files, auth, actions, igno
     actions.setOutput('response', JSON.stringify(response.data))
   } catch (error) {
     if (error.toJSON) {
-      actions.setOutput(JSON.stringify(error.toJSON()));
+      actions.setOutput('requestError', JSON.stringify(error.toJSON()));
     }
 
     if (error.response && ignoredCodes.includes(error.response.status)) {
