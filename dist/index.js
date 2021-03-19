@@ -1340,7 +1340,21 @@ const fs = __webpack_require__(747)
 const METHOD_GET = 'GET'
 const METHOD_POST = 'POST'
 
-const request = async({ method, instanceConfig, data, files, auth, actions, preventFailureOnNoResponse, escapeData }) => {
+/**
+ * @param {Object} param0
+ * @param {string} param0.method HTTP Method
+ * @param {{ baseURL: string; timeout: number; headers: { [name: string]: string } }} param0.instanceConfig
+ * @param {string} param0.data Request Body as string, default {}
+ * @param {string} param0.files Map of Request Files (name: absolute path) as JSON String, default: {}
+ * @param {{ username: string; password: string }|undefined} param0.auth Optional HTTP Basic Auth
+ * @param {*} param0.actions 
+ * @param {number[]} param0.ignoredCodes Prevent Action to fail if the API response with one of this StatusCodes
+ * @param {boolean} param0.preventFailureOnNoResponse Prevent Action to fail if the API respond without Response
+ * @param {boolean} param0.escapeData Escape unescaped JSON content in data
+ *
+ * @returns {void}
+ */
+const request = async({ method, instanceConfig, data, files, auth, actions, ignoredCodes, preventFailureOnNoResponse, escapeData }) => {
   try {
     if (escapeData) {
       data = data.replace(/"[^"]*"/g, (match) => { 
@@ -1389,8 +1403,10 @@ const request = async({ method, instanceConfig, data, files, auth, actions, prev
       actions.setOutput(JSON.stringify(error.toJSON()));
     }
 
-    if (error.response) {
-      actions.setFailed(JSON.stringify({ code: error.response.code, message: error.response.data }))
+    if (error.response && ignoredCodes.includes(error.response.status)) {
+      actions.warning(JSON.stringify({ code: error.response.status, message: error.response.data }))
+    } else if (error.response) {
+      actions.setFailed(JSON.stringify({ code: error.response.status, message: error.response.data }))
     } else if (error.request && !preventFailureOnNoResponse) {
       actions.setFailed(JSON.stringify({ error: "no response received" }));
     } else if (error.request && preventFailureOnNoResponse) {
@@ -1401,6 +1417,11 @@ const request = async({ method, instanceConfig, data, files, auth, actions, prev
   }
 }
 
+/**
+ * @param {string} value
+ *
+ * @returns {Object}
+ */
 const convertToJSON = (value) => {
   try {
     return JSON.parse(value)
@@ -1409,6 +1430,12 @@ const convertToJSON = (value) => {
   }
 }
 
+/**
+ * @param {Object} data
+ * @param {Object} files
+ *
+ * @returns {FormData}
+ */
 const convertToFormData = (data, files) => {
   formData = new FormData()
 
@@ -1423,6 +1450,13 @@ const convertToFormData = (data, files) => {
   return formData
 }
 
+/**
+ * @param {{ baseURL: string; timeout: number; headers: { [name: string]: string } }} instanceConfig
+ * @param {FormData} formData
+ * @param {*} actions
+ *
+ * @returns {{ baseURL: string; timeout: number; headers: { [name: string]: string } }}
+ */
 const updateConfig = async (instanceConfig, formData, actions) => {
   try {
     const formHeaders = formData.getHeaders()
@@ -1444,6 +1478,11 @@ const updateConfig = async (instanceConfig, formData, actions) => {
   }
 }
 
+/**
+ * @param {FormData} formData
+ *
+ * @returns {Promise<number>}
+ */
 const contentLength = (formData) => new Promise((resolve, reject) => {
   formData.getLength((err, length) => {
     if (err) {
@@ -1891,14 +1930,19 @@ function populateMaps (extensions, types) {
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var debug;
-try {
-  /* eslint global-require: off */
-  debug = __webpack_require__(944)("follow-redirects");
-}
-catch (error) {
-  debug = function () { /* */ };
-}
-module.exports = debug;
+
+module.exports = function () {
+  if (!debug) {
+    try {
+      /* eslint global-require: off */
+      debug = __webpack_require__(944)("follow-redirects");
+    }
+    catch (error) {
+      debug = function () { /* */ };
+    }
+  }
+  debug.apply(null, arguments);
+};
 
 
 /***/ }),
@@ -2575,6 +2619,17 @@ function RedirectableRequest(options, responseCallback) {
 }
 RedirectableRequest.prototype = Object.create(Writable.prototype);
 
+RedirectableRequest.prototype.abort = function () {
+  // Abort the internal request
+  this._currentRequest.removeAllListeners();
+  this._currentRequest.on("error", noop);
+  this._currentRequest.abort();
+
+  // Abort this request
+  this.emit("abort");
+  this.removeAllListeners();
+};
+
 // Writes buffered data to the current native request
 RedirectableRequest.prototype.write = function (data, encoding, callback) {
   // Writing is not allowed if end has been called
@@ -2654,18 +2709,39 @@ RedirectableRequest.prototype.removeHeader = function (name) {
 
 // Global timeout for all underlying requests
 RedirectableRequest.prototype.setTimeout = function (msecs, callback) {
+  var self = this;
   if (callback) {
-    this.once("timeout", callback);
+    this.on("timeout", callback);
   }
 
+  // Sets up a timer to trigger a timeout event
+  function startTimer() {
+    if (self._timeout) {
+      clearTimeout(self._timeout);
+    }
+    self._timeout = setTimeout(function () {
+      self.emit("timeout");
+      clearTimer();
+    }, msecs);
+  }
+
+  // Prevent a timeout from triggering
+  function clearTimer() {
+    clearTimeout(this._timeout);
+    if (callback) {
+      self.removeListener("timeout", callback);
+    }
+    if (!this.socket) {
+      self._currentRequest.removeListener("socket", startTimer);
+    }
+  }
+
+  // Start the timer when the socket is opened
   if (this.socket) {
-    startTimer(this, msecs);
+    startTimer();
   }
   else {
-    var self = this;
-    this._currentRequest.once("socket", function () {
-      startTimer(self, msecs);
-    });
+    this._currentRequest.once("socket", startTimer);
   }
 
   this.once("response", clearTimer);
@@ -2674,20 +2750,9 @@ RedirectableRequest.prototype.setTimeout = function (msecs, callback) {
   return this;
 };
 
-function startTimer(request, msecs) {
-  clearTimeout(request._timeout);
-  request._timeout = setTimeout(function () {
-    request.emit("timeout");
-  }, msecs);
-}
-
-function clearTimer() {
-  clearTimeout(this._timeout);
-}
-
 // Proxy all other public ClientRequest methods
 [
-  "abort", "flushHeaders", "getHeader",
+  "flushHeaders", "getHeader",
   "setNoDelay", "setSocketKeepAlive",
 ].forEach(function (method) {
   RedirectableRequest.prototype[method] = function (a, b) {
@@ -3577,7 +3642,14 @@ const method = core.getInput('method') || METHOD_POST;
 const preventFailureOnNoResponse = core.getInput('preventFailureOnNoResponse') === 'true';
 const escapeData = core.getInput('escapeData') === 'true';
 
-request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, files, actions: new GithubActions() })
+const ignoreStatusCodes = core.getInput('ignoreStatusCodes')
+let ignoredCodes = null
+
+if (typeof ignoreStatusCodes === 'string' && ignoreStatusCodes.length > 0) {
+  ignoredCodes = ignoreStatusCodes.split(',').map(statusCode => parseInt(statusCode.trim()))
+}
+
+request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, files, ignoredCodes, actions: new GithubActions() })
 
 
 /***/ }),

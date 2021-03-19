@@ -40,4 +40,11 @@ const method = core.getInput('method') || METHOD_POST;
 const preventFailureOnNoResponse = core.getInput('preventFailureOnNoResponse') === 'true';
 const escapeData = core.getInput('escapeData') === 'true';
 
-request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, files, actions: new GithubActions() })
+const ignoreStatusCodes = core.getInput('ignoreStatusCodes')
+let ignoredCodes = null
+
+if (typeof ignoreStatusCodes === 'string' && ignoreStatusCodes.length > 0) {
+  ignoredCodes = ignoreStatusCodes.split(',').map(statusCode => parseInt(statusCode.trim()))
+}
+
+request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, files, ignoredCodes, actions: new GithubActions() })

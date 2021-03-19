@@ -31,8 +31,9 @@ jobs:
 |password| Password for Basic Auth ||
 |bearerToken| Bearer Authentication Token (without Bearer Prefix) ||
 |customHeaders| Additional header values as JSON string, keys in this object overwrite default headers like Content-Type |'{}'|
-|preventFailureOnNoResponse| Prevent this Action to fail if the request respond without an response. Use 'true' (string) as value to enable it ||
 |escapeData| Escape newlines in data string content. Use 'true' (string) as value to enable it ||
+|preventFailureOnNoResponse| Prevent this Action to fail if the request respond without an response. Use 'true' (string) as value to enable it ||
+|ignoreStatusCodes| Prevent this Action to fail if the request respond with one of the configured Status Codes. Example: '404,401' ||
 
 ### Response
 
