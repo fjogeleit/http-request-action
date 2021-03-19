@@ -48,6 +48,7 @@ jobs:
         with:
           url: 'https://postman-echo.com/status/404'
           method: 'GET'
+          ignoreStatusCodes: '404'
       
       - name: Create Test File
         id: image

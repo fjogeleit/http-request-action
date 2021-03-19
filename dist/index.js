@@ -3643,7 +3643,7 @@ const preventFailureOnNoResponse = core.getInput('preventFailureOnNoResponse') =
 const escapeData = core.getInput('escapeData') === 'true';
 
 const ignoreStatusCodes = core.getInput('ignoreStatusCodes')
-let ignoredCodes = null
+let ignoredCodes = []
 
 if (typeof ignoreStatusCodes === 'string' && ignoreStatusCodes.length > 0) {
   ignoredCodes = ignoreStatusCodes.split(',').map(statusCode => parseInt(statusCode.trim()))
