@@ -10,20 +10,20 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Request Postment Echo GET
+      - name: Request Postman Echo GET
         uses: ./
         with:
           url: 'https://postman-echo.com/get'
           method: 'GET'
       
-      - name: Request Postment Echo POST
+      - name: Request Postman Echo POST
         uses: ./
         with:
           url: 'https://postman-echo.com/post'
           method: 'POST'
           data: '{ "key": "value" }'
       
-      - name: Request Postment Echo POST with Unescaped Newline
+      - name: Request Postman Echo POST with Unescaped Newline
         uses: ./
         with:
           url: 'https://postman-echo.com/post'
@@ -35,7 +35,7 @@ jobs:
               text"
             }
       
-      - name: Request Postment Echo BasicAuth
+      - name: Request Postman Echo BasicAuth
         uses: ./
         with:
           url: 'https://postman-echo.com/basic-auth'
@@ -43,7 +43,7 @@ jobs:
           username: 'postman'
           password: 'password'
       
-      - name: Request Postment Echo with 404 Response and ignore failure code
+      - name: Request Postman Echo with 404 Response and ignore failure code
         uses: ./
         with:
           url: 'https://postman-echo.com/status/404'
@@ -51,11 +51,10 @@ jobs:
           ignoreStatusCodes: '404'
       
       - name: Create Test File
-        id: image
         run: |
           echo "test" > testfile.txt
 
-      - name: Request Postment Echo POST Multipart
+      - name: Request Postman Echo POST Multipart
         uses: ./
         with:
           url: 'https://postman-echo.com/post'
