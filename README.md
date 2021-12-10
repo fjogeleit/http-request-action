@@ -24,7 +24,7 @@ jobs:
 |url     | Request URL   | _required_ Field |
 |method  | Request Method| POST |
 |contentType  | Request ContentType| application/json |
-|data    | Request Body Content as JSON String (or key=value pairs separated by '&' for form-urlencoded content), only for POST / PUT / PATCH Requests | '{}' |
+|data    | Request Body Content:<br>- text content like JSON or XML<br>- key=value pairs separated by '&' and contentType: application/x-www-form-urlencoded<br><br>only for POST / PUT / PATCH Requests | '{}' |
 |files    | Map of key / absolute file paths send as multipart/form-data request to the API, if set the contentType is set to multipart/form-data, values provided by data will be added as additional FormData values, nested objects are not supported. **Example provided in the _test_ Workflow of this Action** | '{}' |
 |timeout| Request Timeout in ms | 5000 (5s) |
 |username| Username for Basic Auth ||
