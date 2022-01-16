@@ -48,5 +48,5 @@ outputs:
     response:
         description: 'HTTP Response Content'
 runs:
-    using: 'node12'
+    using: 'node16'
     main: 'dist/index.js'
