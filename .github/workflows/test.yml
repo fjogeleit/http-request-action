@@ -61,3 +61,10 @@ jobs:
           method: 'POST'
           data: '{ "key": "value" }'
           files: '{ "file": "${{ github.workspace }}/testfile.txt" }'
+
+      - name: Request Postman Echo POST single file
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          method: 'POST'
+          file: "${{ github.workspace }}/testfile.txt"

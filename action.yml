@@ -19,6 +19,9 @@ inputs:
         description: 'Map of absolute file paths as JSON String'
         required: false
         default: '{}'
+    file:
+        description: 'A single absolute file path'
+        required: false
     username:
         description: 'Auth Username'
         required: false

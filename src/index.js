@@ -36,6 +36,7 @@ const instanceConfig = {
 
 const data = core.getInput('data') || '{}';
 const files = core.getInput('files') || '{}';
+const file = core.getInput('file')
 const method = core.getInput('method') || METHOD_POST;
 const preventFailureOnNoResponse = core.getInput('preventFailureOnNoResponse') === 'true';
 const escapeData = core.getInput('escapeData') === 'true';
@@ -47,4 +48,4 @@ if (typeof ignoreStatusCodes === 'string' && ignoreStatusCodes.length > 0) {
   ignoredCodes = ignoreStatusCodes.split(',').map(statusCode => parseInt(statusCode.trim()))
 }
 
-request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, files, ignoredCodes, actions: new GithubActions() })
+request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, files, file, ignoredCodes, actions: new GithubActions() })
