@@ -11,6 +11,7 @@ const METHOD_POST = 'POST'
  * @param {{ baseURL: string; timeout: number; headers: { [name: string]: string } }} param0.instanceConfig
  * @param {string} param0.data Request Body as string, default {}
  * @param {string} param0.files Map of Request Files (name: absolute path) as JSON String, default: {}
+ * @param {string} param0.file Single request file (absolute path)
  * @param {{ username: string; password: string }|undefined} param0.auth Optional HTTP Basic Auth
  * @param {*} param0.actions 
  * @param {number[]} param0.ignoredCodes Prevent Action to fail if the API response with one of this StatusCodes
@@ -19,7 +20,7 @@ const METHOD_POST = 'POST'
  *
  * @returns {void}
  */
-const request = async({ method, instanceConfig, data, files, auth, actions, ignoredCodes, preventFailureOnNoResponse, escapeData }) => {
+const request = async({ method, instanceConfig, data, files, file, auth, actions, ignoredCodes, preventFailureOnNoResponse, escapeData }) => {
   try {
     if (escapeData) {
       data = data.replace(/"[^"]*"/g, (match) => { 
@@ -32,8 +33,8 @@ const request = async({ method, instanceConfig, data, files, auth, actions, igno
     }
 
     if (files && files !== '{}') {
-      filesJson = convertToJSON(files)
-      dataJson = convertToJSON(data)
+      let filesJson = convertToJSON(files)
+      let dataJson = convertToJSON(data)
 
       if (Object.keys(filesJson).length > 0) {
         try {
@@ -44,6 +45,12 @@ const request = async({ method, instanceConfig, data, files, auth, actions, igno
           return
         }
       }
+    }
+
+    // Only consider file if neither data nor files provided
+    if ((!data || data === '{}') && (!files || files === '{}') && file) {
+      data = fs.createReadStream(file)
+      updateConfigForFile(instanceConfig, file, actions)
     }
 
     const requestData = {
@@ -136,6 +143,30 @@ const updateConfig = async (instanceConfig, formData, actions) => {
         ...formHeaders,
         'Content-Length': await contentLength(formData),
         'Content-Type': contentType
+      }
+    }
+  } catch(error) {
+    actions.setFailed({ message: `Unable to read Content-Length: ${error.message}`, data, files })
+  }
+}
+
+/**
+ * @param instanceConfig
+ * @param filePath
+ * @param {*} actions
+ *
+ * @returns {{ baseURL: string; timeout: number; headers: { [name: string]: string } }}
+ */
+const updateConfigForFile = (instanceConfig, filePath, actions) => {
+  try {
+    const { size } = fs.statSync(filePath)
+
+    return {
+      ...instanceConfig,
+      headers: {
+        ...instanceConfig.headers,
+        'Content-Length': size,
+        'Content-Type': 'application/octet-stream'
       }
     }
   } catch(error) {
