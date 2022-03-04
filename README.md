@@ -17,6 +17,10 @@ jobs:
         password: ${{ secrets.AWX_PASSWORD }}
 ```
 
+### Versioning
+
+`master` branch is deprecated. Please use `main` or `v1` to get the latest version of this action. It is recommended to use a fixed version.
+
 ### Request Configuration
 
 |Argument|  Description  |  Default  |
