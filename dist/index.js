@@ -1969,8 +1969,9 @@ const request = async({ method, instanceConfig, data, files, file, auth, actions
 
     actions.setOutput('response', JSON.stringify(response.data))
   } catch (error) {
-    if (error.toJSON) {
-      actions.setOutput('requestError', JSON.stringify(error.toJSON()));
+    if ((typeof error === 'object') && (error.isAxiosError === true)) {
+      const { name, message, code, response } = error
+      actions.setOutput('requestError', JSON.stringify({ name, message, code, status: response && response.status ? response.status : null }));
     }
 
     if (error.response && ignoredCodes.includes(error.response.status)) {

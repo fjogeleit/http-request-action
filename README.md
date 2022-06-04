@@ -15,7 +15,7 @@ jobs:
         method: 'POST'
         username: ${{ secrets.AWX_USER }}
         password: ${{ secrets.AWX_PASSWORD }}
-        customHeaders: '{"Authorization": "Bearer ${{ secrets.TOKEN }}", "Content-Type": "application/json"}'
+        customHeaders: '{"Content-Type": "application/json"}'
         data: '{"key_1": "value_1", "key_2": "value_2"}'
 ```
 
