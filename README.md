@@ -15,7 +15,13 @@ jobs:
         method: 'POST'
         username: ${{ secrets.AWX_USER }}
         password: ${{ secrets.AWX_PASSWORD }}
+        customHeaders: '{"Content-Type": "application/json"}'
+        data: '{"key_1": "value_1", "key_2": "value_2"}'
 ```
+
+### Versioning
+
+`master` branch is deprecated. Please use `main` or `v1` to get the latest version of this action. It is recommended to use a fixed version.
 
 ### Request Configuration
 
@@ -42,7 +48,7 @@ jobs:
 |---|---|
 `response` | Response as JSON String
 
-To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`
+To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`. You can also access specific field from the response data using [fromJson()](https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson) expression.
 
 ```yaml
 steps:
@@ -52,7 +58,9 @@ steps:
     with:
       url: "http://yoursite.com/api"
   - name: Show Response
-    run: echo ${{ steps.myRequest.outputs.response }}
+    run: |
+      echo ${{ steps.myRequest.outputs.response }}
+      echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
 ```
 
 ### Additional Information
