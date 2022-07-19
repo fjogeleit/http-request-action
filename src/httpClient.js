@@ -1,4 +1,4 @@
-const axios = require("axios");
+const axios = require('axios');
 const FormData = require('form-data')
 const fs = require('fs')
 
@@ -8,11 +8,10 @@ const METHOD_POST = 'POST'
 /**
  * @param {Object} param0
  * @param {string} param0.method HTTP Method
- * @param {{ baseURL: string; timeout: number; headers: { [name: string]: string } }} param0.instanceConfig
+ * @param {axios.AxiosRequestConfig} param0.instanceConfig
  * @param {string} param0.data Request Body as string, default {}
  * @param {string} param0.files Map of Request Files (name: absolute path) as JSON String, default: {}
  * @param {string} param0.file Single request file (absolute path)
- * @param {{ username: string; password: string }|undefined} param0.auth Optional HTTP Basic Auth
  * @param {*} param0.actions 
  * @param {number[]} param0.ignoredCodes Prevent Action to fail if the API response with one of this StatusCodes
  * @param {boolean} param0.preventFailureOnNoResponse Prevent Action to fail if the API respond without Response
@@ -20,7 +19,7 @@ const METHOD_POST = 'POST'
  *
  * @returns {void}
  */
-const request = async({ method, instanceConfig, data, files, file, auth, actions, ignoredCodes, preventFailureOnNoResponse, escapeData }) => {
+const request = async({ method, instanceConfig, data, files, file, actions, ignoredCodes, preventFailureOnNoResponse, escapeData }) => {
   try {
     if (escapeData) {
       data = data.replace(/"[^"]*"/g, (match) => { 
@@ -54,7 +53,6 @@ const request = async({ method, instanceConfig, data, files, file, auth, actions
     }
 
     const requestData = {
-      auth,
       method,
       data,
       maxContentLength: Infinity,

@@ -1,4 +1,6 @@
-const core = require("@actions/core");
+const core = require('@actions/core');
+const axios = require('axios');
+const https = require('https');
 const { request, METHOD_POST } = require('./httpClient');
 const { GithubActions } = require('./githubActions');
 
@@ -15,23 +17,28 @@ if (!!core.getInput('customHeaders')) {
 
 const headers = { 'Content-Type': core.getInput('contentType') || 'application/json' }
 
-if (!!core.getInput('username') || !!core.getInput('password')) {
-  core.debug('Add BasicHTTP Auth config')
-
-  auth = {
-    username: core.getInput('username'),
-    password: core.getInput('password')
-  }
-}
-
 if (!!core.getInput('bearerToken')) {
   headers['Authorization'] = `Bearer ${core.getInput('bearerToken')}`;
 }
 
+/** @type {axios.AxiosRequestConfig} */
 const instanceConfig = {
   baseURL: core.getInput('url', { required: true }),
   timeout: parseInt(core.getInput('timeout') || 5000, 10),
   headers: { ...headers, ...customHeaders }
+}
+
+if (!!core.getInput('httpsCA')) {
+  instanceConfig.httpsAgent = new https.Agent({ ca: core.getInput('httpsCA') })
+}
+
+if (!!core.getInput('username') || !!core.getInput('password')) {
+  core.debug('Add BasicHTTP Auth config')
+
+  instanceConfig.auth = {
+    username: core.getInput('username'),
+    password: core.getInput('password')
+  }
 }
 
 const data = core.getInput('data') || '{}';
@@ -48,4 +55,4 @@ if (typeof ignoreStatusCodes === 'string' && ignoreStatusCodes.length > 0) {
   ignoredCodes = ignoreStatusCodes.split(',').map(statusCode => parseInt(statusCode.trim()))
 }
 
-request({ data, method, instanceConfig, auth, preventFailureOnNoResponse, escapeData, files, file, ignoredCodes, actions: new GithubActions() })
+request({ data, method, instanceConfig, preventFailureOnNoResponse, escapeData, files, file, ignoredCodes, actions: new GithubActions() })
