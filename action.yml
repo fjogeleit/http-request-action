@@ -47,6 +47,9 @@ inputs:
     escapeData:
         description: 'Escape newlines in data string content'
         required: false
+    httpsCA:
+        description: 'Certificate authority as string in PEM format'
+        required: false
 outputs:
     response:
         description: 'HTTP Response Content'
