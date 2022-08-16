@@ -1,4 +1,4 @@
-name: 'HTTP Request Action with Headers'
+name: 'HTTP Request Action'
 description: 'Create any HTTP Request'
 inputs:
     url:
