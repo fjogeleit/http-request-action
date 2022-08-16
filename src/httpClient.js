@@ -67,7 +67,7 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
 
     const response = await instance.request(requestData)
 
-    //actions.setOutput('response', JSON.stringify(response.data))
+    actions.setOutput('response', JSON.stringify(response.data))
     
     actions.setOutput('headers', response.headers)
   } catch (error) {
