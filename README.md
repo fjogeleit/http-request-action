@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Deploy Stage
-      uses: fjogeleit/http-request-action@v1
+      uses: boro2g/http-request-action@v1
       with:
         url: 'https://ansible.io/api/v2/job_templates/84/launch/'
         method: 'POST'
@@ -48,6 +48,7 @@ jobs:
 | Variable |  Description  |
 |---|---|
 `response` | Response as JSON String
+`headers` | Headers as JSON String
 
 To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`. You can also access specific field from the response data using [fromJson()](https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson) expression.
 
