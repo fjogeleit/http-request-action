@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Deploy Stage
-      uses: boro2g/http-request-action@v1
+      uses: boro2g/http-request-action@v1.0.2
       with:
         url: 'https://ansible.io/api/v2/job_templates/84/launch/'
         method: 'POST'
@@ -56,7 +56,7 @@ To display HTTP response data in the GitHub Actions log give the request an `id`
 steps:
   - name: Make Request
     id: myRequest
-    uses: boro2g/http-request-action@v1
+    uses: boro2g/http-request-action@v1.0.2
     with:
       url: "http://yoursite.com/api"
   - name: Show Response
