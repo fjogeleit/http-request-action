@@ -56,12 +56,13 @@ To display HTTP response data in the GitHub Actions log give the request an `id`
 steps:
   - name: Make Request
     id: myRequest
-    uses: fjogeleit/http-request-action@v1
+    uses: boro2g/http-request-action@v1
     with:
       url: "http://yoursite.com/api"
   - name: Show Response
     run: |
       echo ${{ steps.myRequest.outputs.response }}
+      echo ${{ steps.myRequest.outputs.headers }}
       echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
 ```
 
