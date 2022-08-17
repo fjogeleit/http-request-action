@@ -48,6 +48,7 @@ jobs:
 | Variable |  Description  |
 |---|---|
 `response` | Response as JSON String
+`headers` | Headers
 
 To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`. You can also access specific field from the response data using [fromJson()](https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson) expression.
 
@@ -61,6 +62,7 @@ steps:
   - name: Show Response
     run: |
       echo ${{ steps.myRequest.outputs.response }}
+      echo ${{ steps.myRequest.outputs.headers }}
       echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
 ```
 

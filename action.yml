@@ -53,6 +53,8 @@ inputs:
 outputs:
     response:
         description: 'HTTP Response Content'
+    headers:
+        description: 'HTTP Response Headers'
 runs:
     using: 'node16'
     main: 'dist/index.js'
