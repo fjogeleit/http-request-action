@@ -41,12 +41,14 @@ jobs:
 |escapeData| Escape newlines in data string content. Use 'true' (string) as value to enable it ||
 |preventFailureOnNoResponse| Prevent this Action to fail if the request respond without an response. Use 'true' (string) as value to enable it ||
 |ignoreStatusCodes| Prevent this Action to fail if the request respond with one of the configured Status Codes. Example: '404,401' ||
+|httpsCA| Certificate authority as string in PEM format ||
 
 ### Response
 
 | Variable |  Description  |
 |---|---|
 `response` | Response as JSON String
+`headers` | Headers
 
 To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`. You can also access specific field from the response data using [fromJson()](https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson) expression.
 
@@ -60,6 +62,7 @@ steps:
   - name: Show Response
     run: |
       echo ${{ steps.myRequest.outputs.response }}
+      echo ${{ steps.myRequest.outputs.headers }}
       echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
 ```
 
