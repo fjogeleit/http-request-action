@@ -2222,9 +2222,14 @@ module.exports.default = axios;
 const axios = __webpack_require__(53);
 const FormData = __webpack_require__(928)
 const fs = __webpack_require__(747)
+const url = __webpack_require__(835);
 
 const METHOD_GET = 'GET'
 const METHOD_POST = 'POST'
+
+const HEADER_CONTENT_TYPE = 'Content-Type'
+
+const CONTENT_TYPE_URLENCODED = 'application/x-www-form-urlencoded'
 
 /**
  * @param {Object} param0
@@ -2271,6 +2276,13 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
     if ((!data || data === '{}') && (!files || files === '{}') && file) {
       data = fs.createReadStream(file)
       updateConfigForFile(instanceConfig, file, actions)
+    }
+
+    if (instanceConfig.headers[HEADER_CONTENT_TYPE] === CONTENT_TYPE_URLENCODED) {
+      let dataJson = convertToJSON(data)
+      if (typeof dataJson === 'object') {
+        data = (new url.URLSearchParams(dataJson)).toString();
+      }
     }
 
     const requestData = {
