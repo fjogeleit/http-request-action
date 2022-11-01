@@ -97,7 +97,7 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
  */
 const convertToJSON = (value) => {
   try {
-    return JSON.parse(value)
+    return JSON.parse(value) || {}
   } catch(e) {
     return {}
   }
