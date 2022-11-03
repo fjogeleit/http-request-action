@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "private": false,
   "scripts": {
-    "build": "esbuild --bundle --outfile=./dist/index.js --target=node16 --platform=node ./src/index.js"
+    "build": "esbuild --bundle --legal-comments=none --outfile=./dist/index.js --target=node16 --platform=node ./src/index.js"
   },
   "repository": {
     "type": "git",

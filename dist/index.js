@@ -14710,15 +14710,3 @@ if (typeof ignoreStatusCodes === "string" && ignoreStatusCodes.length > 0) {
   ignoredCodes = ignoreStatusCodes.split(",").map((statusCode) => parseInt(statusCode.trim()));
 }
 request({ data: data2, method, instanceConfig, preventFailureOnNoResponse, escapeData, files: files2, file, ignoredCodes, actions: new GithubActions() });
-/*!
- * mime-db
- * Copyright(c) 2014 Jonathan Ong
- * Copyright(c) 2015-2022 Douglas Christopher Wilson
- * MIT Licensed
- */
-/*!
- * mime-types
- * Copyright(c) 2014 Jonathan Ong
- * Copyright(c) 2015 Douglas Christopher Wilson
- * MIT Licensed
- */
