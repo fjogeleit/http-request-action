@@ -81,6 +81,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           persist-credentials: false
+          ref: ${{ github.ref }}
 
       - name: Request Postman Echo GET
         uses: ./
