@@ -4,7 +4,6 @@ const https = require('https');
 const { request, METHOD_POST } = require('./httpClient');
 const { GithubActions } = require('./githubActions');
 
-let auth = undefined
 let customHeaders = {}
 
 if (!!core.getInput('customHeaders')) {
