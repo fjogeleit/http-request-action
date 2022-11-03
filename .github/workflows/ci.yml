@@ -65,6 +65,7 @@ jobs:
         node-version: '16'
     - name: Build action
       run: |
+        npm remove ms debug -g &&
         npm ci &&
         npm run build
     - name: Repository Integrity Check
