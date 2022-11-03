@@ -1,12 +1,55 @@
-name: Test
+name: CI
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
 
 jobs:
-  request:
+  build:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+    - id: ref
+      run: |
+        if [[ -n '${{ github.event.ref }}' ]]; then
+          branch="${{ github.event.ref }}"
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+        else
+          branch="${{ github.event.pull_request.head.ref }}"
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+        fi
+    - name: checkout repo
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ steps.ref.outputs.branch }}
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - name: Install dependencies
+      run: |
+        npm ci
+    - name: Build Action
+      run: |
+        npm run build
+    - name: Update dist
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git add ./dist
+        if ! git diff --quiet dist; then
+          git commit -m "Update dist"
+          git push origin HEAD:${{ steps.ref.outputs.branch }}
+        fi
+  test:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
 
@@ -53,7 +96,6 @@ jobs:
       - name: Create Test File
         run: |
           echo "test" > testfile.txt
-
       - name: Request Postman Echo POST Multipart
         uses: ./
         with:
