@@ -59,7 +59,7 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
 
     if (instanceConfig.headers[HEADER_CONTENT_TYPE] === CONTENT_TYPE_URLENCODED) {
       let dataJson = convertToJSON(data)
-      if (typeof dataJson === 'object') {
+      if (typeof dataJson === 'object' && Object.keys(dataJson).length) {
         data = (new url.URLSearchParams(dataJson)).toString();
       }
     }
