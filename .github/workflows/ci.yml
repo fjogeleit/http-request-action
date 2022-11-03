@@ -48,6 +48,9 @@ jobs:
           git push origin HEAD:${{ steps.ref.outputs.branch }}
         fi
   integrity:
+    if: >
+      !failure() &&
+      !cancelled()
     needs:
       - build
     runs-on: ubuntu-latest
