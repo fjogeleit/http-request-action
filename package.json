@@ -19,11 +19,11 @@
   },
   "homepage": "https://github.com/fjogeleit/http-request-action#readme",
   "devDependencies": {
-    "@actions/core": "^1.9.1"
-  },
-  "dependencies": {
     "@zeit/ncc": "^0.22",
     "axios": "^0.21.4",
     "form-data": "^4.0.0"
+  },
+  "dependencies": {
+    "@actions/core": "^1.9.1"
   }
 }
