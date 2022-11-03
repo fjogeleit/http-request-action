@@ -62,11 +62,10 @@ jobs:
         persist-credentials: false
     - uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '16.17.0'
     - name: Build action
       run: |
-        npm remove ms debug -g &&
-        npm ci &&
+        npm ci
         npm run build
     - name: Repository Integrity Check
       run: |
@@ -78,6 +77,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          persist-credentials: false
           ref: ${{ github.ref }}
 
       - name: Request Postman Echo GET
