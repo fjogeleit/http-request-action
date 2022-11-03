@@ -71,6 +71,9 @@ jobs:
       run: |
         git diff --quiet dist
   test:
+    if: >
+      !failure() &&
+      !cancelled()
     needs:
       - integrity
     runs-on: ubuntu-latest
