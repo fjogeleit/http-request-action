@@ -2693,7 +2693,7 @@ const CONTENT_TYPE_URLENCODED = 'application/x-www-form-urlencoded'
  * @param {boolean} param0.preventFailureOnNoResponse Prevent Action to fail if the API respond without Response
  * @param {boolean} param0.escapeData Escape unescaped JSON content in data
  *
- * @returns {void}
+ * @returns {Promise<void>}
  */
 const request = async({ method, instanceConfig, data, files, file, actions, ignoredCodes, preventFailureOnNoResponse, escapeData }) => {
   try {
@@ -2811,7 +2811,7 @@ const convertToFormData = (data, files) => {
  * @param {FormData} formData
  * @param {*} actions
  *
- * @returns {{ baseURL: string; timeout: number; headers: { [name: string]: string } }}
+ * @returns {Promise<{ baseURL: string; timeout: number; headers: { [name: string]: string } }>}
  */
 const updateConfig = async (instanceConfig, formData, actions) => {
   try {
@@ -6640,7 +6640,6 @@ const https = __webpack_require__(211);
 const { request, METHOD_POST } = __webpack_require__(354);
 const { GithubActions } = __webpack_require__(230);
 
-let auth = undefined
 let customHeaders = {}
 
 if (!!core.getInput('customHeaders')) {
