@@ -34,6 +34,7 @@ jobs:
         node-version: '16'
     - name: Install dependencies
       run: |
+        npm remove ms debug -g
         npm ci
     - name: Build Action
       run: |
