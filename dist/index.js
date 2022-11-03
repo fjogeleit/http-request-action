@@ -4967,9 +4967,6 @@ exports["default"] = _default;
 /***/ 8169:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-"use strict";
-
-
 const core = __nccwpck_require__(2186);
 
 class GithubActions {
@@ -5015,9 +5012,6 @@ module.exports = { GithubActions, LogActions }
 
 /***/ 9082:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-"use strict";
-
 
 const axios = __nccwpck_require__(8757);
 const FormData = __nccwpck_require__(4334)
@@ -9172,11 +9166,8 @@ module.exports = JSON.parse('{"application/1d-interleaved-parityfec":{"source":"
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-"use strict";
-
-
 const core = __nccwpck_require__(2186);
 const axios = __nccwpck_require__(8757);
 const https = __nccwpck_require__(5687);
