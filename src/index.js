@@ -1,5 +1,3 @@
-'use strict'
-
 const core = require('@actions/core');
 const axios = require('axios');
 const https = require('https');

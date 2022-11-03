@@ -34,7 +34,6 @@ jobs:
         node-version: '16'
     - name: Install dependencies
       run: |
-        npm remove ms debug -g
         npm ci
     - name: Build Action
       run: |
@@ -80,7 +79,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          persist-credentials: false
           ref: ${{ github.ref }}
 
       - name: Request Postman Echo GET
