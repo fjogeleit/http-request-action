@@ -1,3 +1,5 @@
+'use strict'
+
 const axios = require('axios');
 const FormData = require('form-data')
 const fs = require('fs')
@@ -122,7 +124,7 @@ const convertToJSON = (value) => {
  * @returns {FormData}
  */
 const convertToFormData = (data, files) => {
-  formData = new FormData()
+  const formData = new FormData()
 
   for (const [key, value] of Object.entries(data)) {
     formData.append(key, value)
