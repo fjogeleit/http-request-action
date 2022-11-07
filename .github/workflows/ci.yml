@@ -145,3 +145,19 @@ jobs:
           url: 'https://postman-echo.com/post'
           method: 'POST'
           file: "${{ github.workspace }}/testfile.txt"
+
+      - name: Request Postman Echo POST URLEncoded string data
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          contentType : 'application/x-www-form-urlencoded'
+          method: 'POST'
+          data: 'key=value'
+
+      - name: Request Postman Echo POST URLEncoded json data
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          contentType : 'application/x-www-form-urlencoded'
+          method: 'POST'
+          data: '{"key":"value"}'
