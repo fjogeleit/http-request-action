@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+const yargs = require('yargs/yargs')
+const { hideBin } = require('yargs/helpers')
+const { LogActions } = require('../src/githubActions.js')
+const { request } = require('../src/httpClient');
+
+const argv = yargs(hideBin(process.argv))
+    .option('data', { alias: 'd', type: 'string', description: 'request body data', default: '{}' })
+    .option('files', { alias: 'f', type: 'string', description: 'request files, send as multipart/form-data', default: '{}' })
+    .option('file', { type: 'string', description: 'single file, send as application/octet-stream' })
+    .option('customHeaders', { alias: 'h', type: 'string', description: 'custom request headers', default: '{}' })
+    .option('method', { alias: 'm', type: 'string', description: 'request method (GET, POST, PATCH, PUT, DELETE)', default: 'POST' })
+    .option('contentType', { alias: 't', type: 'string', description: 'request content type', default: 'application/json' })
+    .option('bearerToken', { type: 'string', description: 'bearer token without Bearer prefix, added as Authorization header' })
+    .option('timeout', { type: 'number', description: 'request timeout', default: 5000 })
+    .positional('url', { type: 'string', description: 'URL', description: 'request URL' })
+    .parse()
+
+let customHeaders = {}
+
+if (!!argv.customHeaders) {
+    try {
+        customHeaders = JSON.parse(argv.customHeaders);
+    } catch(error) {
+        console.error('Could not parse customHeaders string value')
+    }
+}
+    
+const headers = { 'Content-Type': argv.contentType || 'application/json' }
+
+if (!!argv.bearerToken) {
+    headers['Authorization'] = `Bearer ${argv.bearerToken}`;
+}
+
+const instanceConfig = {
+    baseURL: argv._[0],
+    timeout: parseInt(argv.timeout || 5000, 10),
+    headers: { ...headers, ...customHeaders }
+}
+
+request({ 
+    data: argv.data,
+    method: argv.method,
+    instanceConfig,
+    preventFailureOnNoResponse: false,
+    escapeData: false,
+    files: argv.files,
+    file: argv.file,
+    ignoredCodes: [],
+    actions: new LogActions()
+})
