@@ -20,7 +20,7 @@
   "homepage": "https://github.com/fjogeleit/http-request-action#readme",
   "devDependencies": {
     "@vercel/ncc": "^0.34.0",
-    "axios": "^1.2.0",
+    "axios": "^1.2.1",
     "form-data": "^4.0.0",
     "yargs": "^17.6.2"
   },
