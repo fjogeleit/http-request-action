@@ -132,6 +132,17 @@ jobs:
           data: '{ "key": "value" }'
           files: '{ "file": "${{ github.workspace }}/testfile.txt" }'
 
+      - name: Request Postman Echo POST and persist response
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          method: 'POST'
+          file: "${{ github.workspace }}/testfile.txt"
+          responseFile: "${{ github.workspace }}/response.json"
+      - name: Output responseFile
+        run: |
+          cat "${{ github.workspace }}/response.json"
+
       - name: Request Postman Echo POST Multipart without data
         uses: ./
         with:
