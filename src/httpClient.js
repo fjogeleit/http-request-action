@@ -4,6 +4,7 @@ const axios = require('axios');
 const FormData = require('form-data')
 const fs = require('fs')
 const url = require('url');
+const { GithubActions } = require('./githubActions');
 
 const METHOD_GET = 'GET'
 const METHOD_POST = 'POST'
@@ -19,12 +20,12 @@ const CONTENT_TYPE_URLENCODED = 'application/x-www-form-urlencoded'
  * @param {string} param0.data Request Body as string, default {}
  * @param {string} param0.files Map of Request Files (name: absolute path) as JSON String, default: {}
  * @param {string} param0.file Single request file (absolute path)
- * @param {*} param0.actions 
+ * @param {GithubActions} param0.actions 
  * @param {number[]} param0.ignoredCodes Prevent Action to fail if the API response with one of this StatusCodes
  * @param {boolean} param0.preventFailureOnNoResponse Prevent Action to fail if the API respond without Response
  * @param {boolean} param0.escapeData Escape unescaped JSON content in data
  *
- * @returns {Promise<void>}
+ * @returns {Promise<axios.AxiosResponse>}
  */
 const request = async({ method, instanceConfig, data, files, file, actions, ignoredCodes, preventFailureOnNoResponse, escapeData }) => {
   try {
@@ -47,7 +48,7 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
           data = convertToFormData(dataJson, filesJson)
           instanceConfig = await updateConfig(instanceConfig, data, actions)
         } catch(error) {
-          actions.setFailed({ message: `Unable to convert Data and Files into FormData: ${error.message}`, data: dataJson, files: filesJson })
+          actions.setFailed(JSON.stringify({ message: `Unable to convert Data and Files into FormData: ${error.message}`, data: dataJson, files: filesJson }))
           return
         }
       }
@@ -75,6 +76,7 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
 
     actions.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
     
+    /** @type {axios.AxiosInstance} */
     const instance = axios.create(instanceConfig);
 
     actions.debug('Request Data: ' + JSON.stringify(requestData))
@@ -84,6 +86,8 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
     actions.setOutput('response', JSON.stringify(response.data))
     
     actions.setOutput('headers', response.headers)
+
+    return response
   } catch (error) {
     if ((typeof error === 'object') && (error.isAxiosError === true)) {
       const { name, message, code, response } = error

@@ -7,6 +7,10 @@ class GithubActions {
     core.debug(message)
   }
 
+  info(message) {
+    core.info(message)
+  }
+
   warning(message) {
     core.warning(message)
   }
@@ -21,6 +25,10 @@ class GithubActions {
 }
 
 class LogActions {
+  info(message) {
+    console.info(message)
+  }
+
   debug(message) {
     console.info(message)
   }

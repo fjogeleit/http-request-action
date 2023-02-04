@@ -5,6 +5,7 @@ const axios = require('axios');
 const https = require('https');
 const { request, METHOD_POST } = require('./httpClient');
 const { GithubActions } = require('./githubActions');
+const { createPersistHandler } = require('./handler/persist');
 
 let customHeaders = {}
 
@@ -45,15 +46,27 @@ if (!!core.getInput('username') || !!core.getInput('password')) {
 const data = core.getInput('data') || '{}';
 const files = core.getInput('files') || '{}';
 const file = core.getInput('file')
+const responseFile = core.getInput('responseFile')
 const method = core.getInput('method') || METHOD_POST;
 const preventFailureOnNoResponse = core.getInput('preventFailureOnNoResponse') === 'true';
 const escapeData = core.getInput('escapeData') === 'true';
 
-const ignoreStatusCodes = core.getInput('ignoreStatusCodes')
-let ignoredCodes = []
+const ignoreStatusCodes = core.getInput('ignoreStatusCodes');
+let ignoredCodes = [];
 
 if (typeof ignoreStatusCodes === 'string' && ignoreStatusCodes.length > 0) {
   ignoredCodes = ignoreStatusCodes.split(',').map(statusCode => parseInt(statusCode.trim()))
 }
 
-request({ data, method, instanceConfig, preventFailureOnNoResponse, escapeData, files, file, ignoredCodes, actions: new GithubActions() })
+const handler = [];
+const actions = new GithubActions();
+
+if (!!responseFile) {
+  handler.push(createPersistHandler(responseFile, actions))
+}
+
+request({ data, method, instanceConfig, preventFailureOnNoResponse, escapeData, files, file, ignoredCodes, actions }).then(response => {
+  if (typeof response == 'object') {
+    handler.forEach(h => h(response))
+  }
+})
