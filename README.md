@@ -42,6 +42,7 @@ jobs:
 |preventFailureOnNoResponse| Prevent this Action to fail if the request respond without an response. Use 'true' (string) as value to enable it ||
 |ignoreStatusCodes| Prevent this Action to fail if the request respond with one of the configured Status Codes. Example: '404,401' ||
 |httpsCA| Certificate authority as string in PEM format ||
+|responseFile| Persist the response data to the specified file path ||
 
 ### Response
 
@@ -73,3 +74,25 @@ Additional information is available if debug logging is enabled:
 - Request Data (Body / Auth / Method)
 
 To [enable debug logging in GitHub Actions](https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging) create a secret `ACTIONS_RUNNER_DEBUG` with a value of `true`
+
+#### Local Usage
+
+* You can execute this tool locally with the provided CLI `bin/http-action`.
+
+```bash
+bin/http-action --help                   
+Positionals:
+  url  request URL                                                     [string]
+
+Optionen:
+      --help           helper text                                     [boolean]
+  -d, --data           request body data                               [string] [default: "{}"]
+  -f, --files          request files, send as multipart/form-data      [string] [default: "{}"]
+      --file           single file, send as application/octet-stream   [string]
+  -h, --customHeaders  custom request headers                          [string] [default: "{}"]
+  -m, --method         request method (GET, POST, PATCH, PUT, DELETE)  [string] [default: "POST"]
+  -t, --contentType    request content type                            [string] [default: "application/json"]
+      --bearerToken    bearer token without Bearer prefix, added as
+                       Authorization header                            [string]
+      --timeout        request timeout                                 [number] [default: 5000]
+```

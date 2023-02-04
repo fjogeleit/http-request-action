@@ -50,6 +50,9 @@ inputs:
     httpsCA:
         description: 'Certificate authority as string in PEM format'
         required: false
+    responseFile:
+        description: 'Persist the response data to the specified file path'
+        required: false
 outputs:
     response:
         description: 'HTTP Response Content'
