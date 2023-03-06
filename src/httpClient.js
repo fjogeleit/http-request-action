@@ -1,10 +1,11 @@
 'use strict'
 
 const axios = require('axios');
-const FormData = require('form-data')
-const fs = require('fs')
+const FormData = require('form-data');
+const fs = require('fs');
 const url = require('url');
 const { GithubActions } = require('./githubActions');
+const { convertToJSON, convertToFormData, retry } = require('./helper');
 
 const METHOD_GET = 'GET'
 const METHOD_POST = 'POST'
@@ -21,15 +22,21 @@ const CONTENT_TYPE_URLENCODED = 'application/x-www-form-urlencoded'
  * @param {string} param0.files Map of Request Files (name: absolute path) as JSON String, default: {}
  * @param {string} param0.file Single request file (absolute path)
  * @param {GithubActions} param0.actions 
- * @param {number[]} param0.ignoredCodes Prevent Action to fail if the API response with one of this StatusCodes
- * @param {boolean} param0.preventFailureOnNoResponse Prevent Action to fail if the API respond without Response
- * @param {boolean} param0.escapeData Escape unescaped JSON content in data
+ * @param {{ 
+ *  ignoredCodes: number[];
+ *  preventFailureOnNoResponse: boolean,
+ *  escapeData: boolean;
+ *  retry: number;
+ *  retryWait: number;
+ * }} param0.options
  *
  * @returns {Promise<axios.AxiosResponse>}
  */
-const request = async({ method, instanceConfig, data, files, file, actions, ignoredCodes, preventFailureOnNoResponse, escapeData }) => {
+const request = async({ method, instanceConfig, data, files, file, actions, options }) => {
+  actions.debug(`options: ${JSON.stringify(options)}`)
+  
   try {
-    if (escapeData) {
+    if (options.escapeData) {
       data = data.replace(/"[^"]*"/g, (match) => { 
         return match.replace(/[\n\r]\s*/g, "\\n");
       }); 
@@ -81,10 +88,38 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
 
     actions.debug('Request Data: ' + JSON.stringify(requestData))
 
-    const response = await instance.request(requestData)
+    const execRequest = async () => {
+      try {
+        return await instance.request(requestData)
+      } catch(error) {
+        if (error.response && options.ignoredCodes.includes(error.response.status)) {
+          actions.warning(`ignored status code: ${JSON.stringify({ code: error.response.status, message: error.response.data })}`)
+          
+          return null
+        }
+        
+        if (!error.response && error.request && options.preventFailureOnNoResponse) {
+          actions.warning(`no response received: ${JSON.stringify(error)}`);
+
+          return null
+        }
+
+        throw error
+      }
+    }
+
+    /** @type {axios.AxiosResponse|null} */
+    const response = await retry(execRequest, {
+      actions,
+      retry: options.retry || 0,
+      sleep: options.retryWait // wait 3s after each retry
+    })
+
+    if (!response) {
+      return null
+    }
 
     actions.setOutput('response', JSON.stringify(response.data))
-    
     actions.setOutput('headers', response.headers)
 
     return response
@@ -94,51 +129,14 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
       actions.setOutput('requestError', JSON.stringify({ name, message, code, status: response && response.status ? response.status : null }));
     }
 
-    if (error.response && ignoredCodes.includes(error.response.status)) {
-      actions.warning(JSON.stringify({ code: error.response.status, message: error.response.data }))
-    } else if (error.response) {
+    if (error.response) {
       actions.setFailed(JSON.stringify({ code: error.response.status, message: error.response.data }))
-    } else if (error.request && !preventFailureOnNoResponse) {
+    } else if (error.request) {
       actions.setFailed(JSON.stringify({ error: "no response received" }));
-    } else if (error.request && preventFailureOnNoResponse) {
-      actions.warning(JSON.stringify(error));
     } else {
       actions.setFailed(JSON.stringify({ message: error.message, data }));
     }
   }
-}
-
-/**
- * @param {string} value
- *
- * @returns {Object}
- */
-const convertToJSON = (value) => {
-  try {
-    return JSON.parse(value) || {}
-  } catch(e) {
-    return {}
-  }
-}
-
-/**
- * @param {Object} data
- * @param {Object} files
- *
- * @returns {FormData}
- */
-const convertToFormData = (data, files) => {
-  const formData = new FormData()
-
-  for (const [key, value] of Object.entries(data)) {
-    formData.append(key, value)
-  }
-
-  for (const [key, value] of Object.entries(files)) {
-    formData.append(key, fs.createReadStream(value))
-  }
-
-  return formData
 }
 
 /**

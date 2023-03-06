@@ -43,6 +43,16 @@ if (!!core.getInput('username') || !!core.getInput('password')) {
   }
 }
 
+let retry = 0
+if (!!core.getInput('retry')) {
+  retry = parseInt(core.getInput('retry'))
+}
+
+let retryWait = 3000
+if (!!core.getInput('retryWait')) {
+  retry = parseInt(core.getInput('retryWait'))
+}
+
 const data = core.getInput('data') || '{}';
 const files = core.getInput('files') || '{}';
 const file = core.getInput('file')
@@ -65,7 +75,15 @@ if (!!responseFile) {
   handler.push(createPersistHandler(responseFile, actions))
 }
 
-request({ data, method, instanceConfig, preventFailureOnNoResponse, escapeData, files, file, ignoredCodes, actions }).then(response => {
+const options = {
+  ignoredCodes,
+  preventFailureOnNoResponse,
+  escapeData,
+  retry,
+  retryWait
+}
+
+request({ data, method, instanceConfig, files, file, actions, options }).then(response => {
   if (typeof response == 'object') {
     handler.forEach(h => h(response))
   }
