@@ -5058,6 +5058,88 @@ module.exports = { createPersistHandler }
 
 /***/ }),
 
+/***/ 6989:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const { GithubActions } = __nccwpck_require__(8169);
+
+/**
+ * @param {string} value
+ *
+ * @returns {Object}
+ */
+const convertToJSON = (value) => {
+  try {
+    return JSON.parse(value) || {};
+  } catch (e) {
+    return {};
+  }
+};
+
+/**
+ * @param {Object} data
+ * @param {Object} files
+ *
+ * @returns {FormData}
+ */
+const convertToFormData = (data, files) => {
+  const formData = new FormData();
+
+  for (const [key, value] of Object.entries(data)) {
+    formData.append(key, value);
+  }
+
+  for (const [key, value] of Object.entries(files)) {
+    formData.append(key, fs.createReadStream(value));
+  }
+
+  return formData;
+};
+
+/**
+ * @param {() => Promise} callback
+ * @param {{ retry: number; sleep: number; actions: GithubActions }} options
+ *
+ * @returns {Promise}
+ */
+const retry = async (callback, options) => {
+  let lastErr = null;
+  let i = 0;
+
+  do {
+    try {
+      return callback();
+    } catch (err) {
+      lastErr = err;
+    }
+
+    if (i < options.retries) {
+      options.actions.warning(`#${i + 1} request failed: ${err}`);
+      await sleep(options.sleep);
+    }
+
+    i++;
+  } while (i <= options.retry);
+
+  throw lastErr;
+};
+
+function sleep(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+module.exports = {
+  convertToJSON,
+  convertToFormData,
+  retry,
+};
+
+
+/***/ }),
+
 /***/ 9082:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -5069,6 +5151,7 @@ const FormData = __nccwpck_require__(4334)
 const fs = __nccwpck_require__(7147)
 const url = __nccwpck_require__(7310);
 const { GithubActions } = __nccwpck_require__(8169);
+const { convertToJSON, convertToFormData, retry } = __nccwpck_require__(6989);
 
 const METHOD_GET = 'GET'
 const METHOD_POST = 'POST'
@@ -5085,15 +5168,13 @@ const CONTENT_TYPE_URLENCODED = 'application/x-www-form-urlencoded'
  * @param {string} param0.files Map of Request Files (name: absolute path) as JSON String, default: {}
  * @param {string} param0.file Single request file (absolute path)
  * @param {GithubActions} param0.actions 
- * @param {number[]} param0.ignoredCodes Prevent Action to fail if the API response with one of this StatusCodes
- * @param {boolean} param0.preventFailureOnNoResponse Prevent Action to fail if the API respond without Response
- * @param {boolean} param0.escapeData Escape unescaped JSON content in data
+ * @param {{ ignoredCodes: number[]; preventFailureOnNoResponse: boolean; escapeData: boolean; retry: number; retryWait: number }} param0.options
  *
  * @returns {Promise<axios.AxiosResponse>}
  */
-const request = async({ method, instanceConfig, data, files, file, actions, ignoredCodes, preventFailureOnNoResponse, escapeData }) => {
+const request = async({ method, instanceConfig, data, files, file, actions, options }) => {
   try {
-    if (escapeData) {
+    if (options.escapeData) {
       data = data.replace(/"[^"]*"/g, (match) => { 
         return match.replace(/[\n\r]\s*/g, "\\n");
       }); 
@@ -5145,7 +5226,31 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
 
     actions.debug('Request Data: ' + JSON.stringify(requestData))
 
-    const response = await instance.request(requestData)
+    const execRequest = async () => {
+      try {
+        return instance.request(requestData)
+      } catch(error) {
+        if (error.response && options.ignoredCodes.includes(error.response.status)) {
+          actions.warning(`ignored status code: ${JSON.stringify({ code: error.response.status, message: error.response.data })}`)
+          
+          return null
+        }
+        
+        if (!error.response && error.request && options.preventFailureOnNoResponse) {
+          actions.warning(`no response received: ${JSON.stringify(error)}`);
+
+          return null
+        }
+
+        throw error
+      }
+    }
+
+    const response = await retry(execRequest, {
+      actions,
+      retry: options.retry || 0,
+      sleep: options.retryWait // wait 3s after each retry
+    })
 
     actions.setOutput('response', JSON.stringify(response.data))
     
@@ -5158,51 +5263,14 @@ const request = async({ method, instanceConfig, data, files, file, actions, igno
       actions.setOutput('requestError', JSON.stringify({ name, message, code, status: response && response.status ? response.status : null }));
     }
 
-    if (error.response && ignoredCodes.includes(error.response.status)) {
-      actions.warning(JSON.stringify({ code: error.response.status, message: error.response.data }))
-    } else if (error.response) {
+    if (error.response) {
       actions.setFailed(JSON.stringify({ code: error.response.status, message: error.response.data }))
-    } else if (error.request && !preventFailureOnNoResponse) {
+    } else if (error.request) {
       actions.setFailed(JSON.stringify({ error: "no response received" }));
-    } else if (error.request && preventFailureOnNoResponse) {
-      actions.warning(JSON.stringify(error));
     } else {
       actions.setFailed(JSON.stringify({ message: error.message, data }));
     }
   }
-}
-
-/**
- * @param {string} value
- *
- * @returns {Object}
- */
-const convertToJSON = (value) => {
-  try {
-    return JSON.parse(value) || {}
-  } catch(e) {
-    return {}
-  }
-}
-
-/**
- * @param {Object} data
- * @param {Object} files
- *
- * @returns {FormData}
- */
-const convertToFormData = (data, files) => {
-  const formData = new FormData()
-
-  for (const [key, value] of Object.entries(data)) {
-    formData.append(key, value)
-  }
-
-  for (const [key, value] of Object.entries(files)) {
-    formData.append(key, fs.createReadStream(value))
-  }
-
-  return formData
 }
 
 /**
@@ -5406,7 +5474,7 @@ module.exports = require("zlib");
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
-// Axios v1.3.2 Copyright (c) 2023 Matt Zabriskie and contributors
+// Axios v1.3.4 Copyright (c) 2023 Matt Zabriskie and contributors
 
 
 const FormData$1 = __nccwpck_require__(4334);
@@ -6989,9 +7057,13 @@ function isValidHeaderName(str) {
   return /^[-_a-zA-Z]+$/.test(str.trim());
 }
 
-function matchHeaderValue(context, value, header, filter) {
+function matchHeaderValue(context, value, header, filter, isHeaderNameFilter) {
   if (utils.isFunction(filter)) {
     return filter.call(this, value, header);
+  }
+
+  if (isHeaderNameFilter) {
+    value = header;
   }
 
   if (!utils.isString(value)) return;
@@ -7137,7 +7209,7 @@ class AxiosHeaders {
 
     while (i--) {
       const key = keys[i];
-      if(!matcher || matchHeaderValue(this, this[key], key, matcher)) {
+      if(!matcher || matchHeaderValue(this, this[key], key, matcher, true)) {
         delete this[key];
         deleted = true;
       }
@@ -7356,7 +7428,7 @@ function buildFullPath(baseURL, requestedURL) {
   return requestedURL;
 }
 
-const VERSION = "1.3.2";
+const VERSION = "1.3.4";
 
 function parseProtocol(url) {
   const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
@@ -7918,15 +7990,39 @@ function setProxy(options, configProxy, location) {
 
 const isHttpAdapterSupported = typeof process !== 'undefined' && utils.kindOf(process) === 'process';
 
+// temporary hotfix
+
+const wrapAsync = (asyncExecutor) => {
+  return new Promise((resolve, reject) => {
+    let onDone;
+    let isDone;
+
+    const done = (value, isRejected) => {
+      if (isDone) return;
+      isDone = true;
+      onDone && onDone(value, isRejected);
+    };
+
+    const _resolve = (value) => {
+      done(value);
+      resolve(value);
+    };
+
+    const _reject = (reason) => {
+      done(reason, true);
+      reject(reason);
+    };
+
+    asyncExecutor(_resolve, _reject, (onDoneHandler) => (onDone = onDoneHandler)).catch(_reject);
+  })
+};
+
 /*eslint consistent-return:0*/
 const httpAdapter = isHttpAdapterSupported && function httpAdapter(config) {
-  /*eslint no-async-promise-executor:0*/
-  return new Promise(async function dispatchHttpRequest(resolvePromise, rejectPromise) {
-    let data = config.data;
-    const responseType = config.responseType;
-    const responseEncoding = config.responseEncoding;
+  return wrapAsync(async function dispatchHttpRequest(resolve, reject, onDone) {
+    let {data} = config;
+    const {responseType, responseEncoding} = config;
     const method = config.method.toUpperCase();
-    let isFinished;
     let isDone;
     let rejected = false;
     let req;
@@ -7934,10 +8030,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter(config) {
     // temporary internal emitter until the AxiosRequest class will be implemented
     const emitter = new EventEmitter__default["default"]();
 
-    function onFinished() {
-      if (isFinished) return;
-      isFinished = true;
-
+    const onFinished = () => {
       if (config.cancelToken) {
         config.cancelToken.unsubscribe(abort);
       }
@@ -7947,28 +8040,15 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter(config) {
       }
 
       emitter.removeAllListeners();
-    }
+    };
 
-    function done(value, isRejected) {
-      if (isDone) return;
-
+    onDone((value, isRejected) => {
       isDone = true;
-
       if (isRejected) {
         rejected = true;
         onFinished();
       }
-
-      isRejected ? rejectPromise(value) : resolvePromise(value);
-    }
-
-    const resolve = function resolve(value) {
-      done(value);
-    };
-
-    const reject = function reject(value) {
-      done(value, true);
-    };
+    });
 
     function abort(reason) {
       emitter.emit('abort', !reason || reason.type ? new CanceledError(null, config, req) : reason);
@@ -8066,7 +8146,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter(config) {
       if (!headers.hasContentLength()) {
         try {
           const knownLength = await util__default["default"].promisify(data.getLength).call(data);
-          headers.setContentLength(knownLength);
+          Number.isFinite(knownLength) && knownLength >= 0 && headers.setContentLength(knownLength);
           /*eslint no-empty:0*/
         } catch (e) {
         }
@@ -9683,6 +9763,16 @@ if (!!core.getInput('username') || !!core.getInput('password')) {
   }
 }
 
+let retry = 0
+if (!!core.getInput('retry')) {
+  retry = parseInt(core.getInput('retry'))
+}
+
+let retryWait = 3000
+if (!!core.getInput('retryWait')) {
+  retry = parseInt(core.getInput('retryWait'))
+}
+
 const data = core.getInput('data') || '{}';
 const files = core.getInput('files') || '{}';
 const file = core.getInput('file')
@@ -9705,7 +9795,15 @@ if (!!responseFile) {
   handler.push(createPersistHandler(responseFile, actions))
 }
 
-request({ data, method, instanceConfig, preventFailureOnNoResponse, escapeData, files, file, ignoredCodes, actions }).then(response => {
+const options = {
+  ignoredCodes,
+  preventFailureOnNoResponse,
+  escapeData,
+  retry,
+  retryWait
+}
+
+request({ data, method, instanceConfig, files, file, actions, options }).then(response => {
   if (typeof response == 'object') {
     handler.forEach(h => h(response))
   }
