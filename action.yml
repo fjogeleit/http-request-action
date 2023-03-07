@@ -53,6 +53,12 @@ inputs:
     responseFile:
         description: 'Persist the response data to the specified file path'
         required: false
+    retry:
+        description: 'optional amount of retries if the request fails'
+        required: false
+    retryWait:
+        description: 'wait time between retries in milliseconds'
+        required: false
 outputs:
     response:
         description: 'HTTP Response Content'
