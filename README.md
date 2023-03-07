@@ -43,6 +43,8 @@ jobs:
 |ignoreStatusCodes| Prevent this Action to fail if the request respond with one of the configured Status Codes. Example: '404,401' ||
 |httpsCA| Certificate authority as string in PEM format ||
 |responseFile| Persist the response data to the specified file path ||
+|retry| optional amount of retries if the request is failing, does not retry if the status code is ignored ||
+|retryWait| time between each retry in millseconds | 3000 |
 
 ### Response
 
