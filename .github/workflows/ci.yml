@@ -81,6 +81,13 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      - name: Request Postman Echo GET invalid customHeaders
+        uses: fjogeleit/http-request-action@main
+        with:
+          url: 'https://postman-echo.com/get'
+          method: 'GET'
+          customHeaders: '{"api": "value",}'
+      
       - name: Request Postman Echo GET
         uses: ./
         with:
