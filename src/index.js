@@ -13,7 +13,8 @@ if (!!core.getInput('customHeaders')) {
   try {
     customHeaders = JSON.parse(core.getInput('customHeaders'));
   } catch(error) {
-    core.error('Could not parse customHeaders string value')
+    core.debug(`Invalid customHeaders string: ${core.getInput('customHeaders')}`)
+    core.error(`Could not parse customHeaders string value: ${error}`)
   }
 }
 

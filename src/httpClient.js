@@ -112,7 +112,7 @@ const request = async({ method, instanceConfig, data, files, file, actions, opti
     const response = await retry(execRequest, {
       actions,
       retry: options.retry || 0,
-      sleep: options.retryWait // wait 3s after each retry
+      sleep: options.retryWait // wait time after each retry
     })
 
     if (!response) {

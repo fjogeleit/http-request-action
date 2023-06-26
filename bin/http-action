@@ -42,10 +42,14 @@ request({
     data: argv.data,
     method: argv.method,
     instanceConfig,
-    preventFailureOnNoResponse: false,
-    escapeData: false,
     files: argv.files,
     file: argv.file,
-    ignoredCodes: [],
-    actions: new LogActions()
+    actions: new LogActions(),
+    options: {
+        ignoredCodes: [],
+        escapeData: false,
+        preventFailureOnNoResponse: false,
+        retry: 0,
+        retryWait: 0
+    }
 })
