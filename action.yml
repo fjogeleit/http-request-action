@@ -50,6 +50,12 @@ inputs:
     httpsCA:
         description: 'Certificate authority as string in PEM format'
         required: false
+    httpsCert:
+        description: 'Client Certificate as string'
+        required: false
+    httpsKey:
+        description: 'Client Certificate Key as string'
+        required: false
     responseFile:
         description: 'Persist the response data to the specified file path'
         required: false
