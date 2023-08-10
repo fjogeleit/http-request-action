@@ -31,8 +31,12 @@ const instanceConfig = {
   headers: { ...headers, ...customHeaders }
 }
 
-if (!!core.getInput('httpsCA')) {
-  instanceConfig.httpsAgent = new https.Agent({ ca: core.getInput('httpsCA') })
+if (!!core.getInput('httpsCA') || !!core.getInput('httpsCert')) {
+  instanceConfig.httpsAgent = new https.Agent({ 
+    ca: core.getInput('httpsCA') || undefined,
+    cert: core.getInput('httpsCert') || undefined,
+    key: core.getInput('httpsKey') || undefined
+  })
 }
 
 if (!!core.getInput('username') || !!core.getInput('password')) {
