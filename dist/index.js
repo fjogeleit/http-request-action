@@ -27422,7 +27422,7 @@ const convertToJSON = (value) => {
  *
  * @returns {FormData}
  */
-const convertToFormData = (data, files, convertPaths) => {
+const convertToFormData = async (data, files, convertPaths) => {
   const formData = new FormData();
 
   for (const [key, value] of Object.entries(data)) {
@@ -27430,7 +27430,11 @@ const convertToFormData = (data, files, convertPaths) => {
   }
 
   for (const [key, value] of Object.entries(files)) {
-    formData.append(key, fs.createReadStream(value));
+    if (Array.isArray(value)) {
+      value.forEach(v => formData.append(key, fs.createReadStream(v)))
+    } else {
+      formData.append(key, fs.createReadStream(value));
+    }
   }
 
   return formData;
