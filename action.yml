@@ -59,6 +59,10 @@ inputs:
     responseFile:
         description: 'Persist the response data to the specified file path'
         required: false
+    maskResponse:
+        description: 'Allows to mark your response as secret and hide the output in the action logs'
+        required: false
+        default: 'false'
     retry:
         description: 'optional amount of retries if the request fails'
         required: false
