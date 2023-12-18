@@ -19,6 +19,10 @@ class GithubActions {
     core.setOutput(name, output)
   }
 
+  setSecret(value) {
+    core.setSecret(value)
+  }
+
   setFailed(message) {
     core.setFailed(message)
   }

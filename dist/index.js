@@ -26561,6 +26561,10 @@ class GithubActions {
     core.setOutput(name, output)
   }
 
+  setSecret(value) {
+    core.setSecret(value)
+  }
+
   setFailed(message) {
     core.setFailed(message)
   }
@@ -26590,6 +26594,57 @@ class LogActions {
 
 module.exports = { GithubActions, LogActions }
 
+
+/***/ }),
+
+/***/ 8566:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const axios = __nccwpck_require__(8757);
+const { GithubActions } = __nccwpck_require__(8169);
+
+/**
+ * @param {GithubActions} actions
+ * 
+ * @returns {(response: axios.AxiosResponse) => void}
+ */
+const createMaskHandler = (actions) => (response) => {
+    let data = response.data
+
+    if (typeof data == 'object') {
+        data = JSON.stringify(data)
+    }
+
+    actions.setSecret(data)
+}
+
+module.exports = { createMaskHandler }
+
+/***/ }),
+
+/***/ 2190:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const axios = __nccwpck_require__(8757);
+const { GithubActions } = __nccwpck_require__(8169);
+
+/**
+ * @param {GithubActions} actions
+ * 
+ * @returns {(response: axios.AxiosResponse) => void}
+ */
+const createOutputHandler  = (actions) => (response) => {
+    actions.setOutput('response', response.data)
+    actions.setOutput('headers', response.headers)
+}
+
+module.exports = { createOutputHandler }
 
 /***/ }),
 
@@ -26839,9 +26894,6 @@ const request = async({ method, instanceConfig, data, files, file, actions, opti
     if (!response) {
       return null
     }
-
-    actions.setOutput('response', JSON.stringify(response.data))
-    actions.setOutput('headers', response.headers)
 
     return response
   } catch (error) {
@@ -33180,7 +33232,10 @@ const axios = __nccwpck_require__(8757);
 const https = __nccwpck_require__(5687);
 const { request, METHOD_POST } = __nccwpck_require__(9082);
 const { GithubActions } = __nccwpck_require__(8169);
+
 const { createPersistHandler } = __nccwpck_require__(6733);
+const { createOutputHandler } = __nccwpck_require__(2190);
+const { createMaskHandler } = __nccwpck_require__(8566);
 
 let customHeaders = {}
 
@@ -33248,8 +33303,15 @@ if (typeof ignoreStatusCodes === 'string' && ignoreStatusCodes.length > 0) {
   ignoredCodes = ignoreStatusCodes.split(',').map(statusCode => parseInt(statusCode.trim()))
 }
 
-const handler = [];
 const actions = new GithubActions();
+
+const handler = [];
+
+if (core.getBooleanInput('maskResponse')) {
+  handler.push(createMaskHandler(actions))
+}
+
+handler.push(createOutputHandler(actions))
 
 if (!!responseFile) {
   handler.push(createPersistHandler(responseFile, actions))
@@ -33264,7 +33326,7 @@ const options = {
 }
 
 request({ data, method, instanceConfig, files, file, actions, options }).then(response => {
-  if (typeof response == 'object') {
+  if (response && typeof response == 'object') {
     handler.forEach(h => h(response))
   }
 })
