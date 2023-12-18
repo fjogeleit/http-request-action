@@ -1,6 +1,6 @@
 {
   "name": "http-request-action",
-  "version": "1.14.1",
+  "version": "1.14.2",
   "description": "",
   "main": "src/index.js",
   "private": false,
@@ -19,13 +19,13 @@
   },
   "homepage": "https://github.com/fjogeleit/http-request-action#readme",
   "devDependencies": {
-    "@vercel/ncc": "^0.36.1",
-    "axios": "^1.4",
+    "@vercel/ncc": "^0.38.1",
+    "axios": "^1.6",
     "form-data": "^4.0.0",
     "yargs": "^17.7.2"
   },
   "dependencies": {
-    "@actions/core": "^1.10.0"
+    "@actions/core": "^1.10.1"
   },
   "engines": {
     "node": ">=16.0.0"

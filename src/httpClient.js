@@ -119,9 +119,6 @@ const request = async({ method, instanceConfig, data, files, file, actions, opti
       return null
     }
 
-    actions.setOutput('response', JSON.stringify(response.data))
-    actions.setOutput('headers', response.headers)
-
     return response
   } catch (error) {
     if ((typeof error === 'object') && (error.isAxiosError === true)) {

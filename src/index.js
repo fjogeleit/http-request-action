@@ -5,7 +5,10 @@ const axios = require('axios');
 const https = require('https');
 const { request, METHOD_POST } = require('./httpClient');
 const { GithubActions } = require('./githubActions');
+
 const { createPersistHandler } = require('./handler/persist');
+const { createOutputHandler } = require('./handler/output');
+const { createMaskHandler } = require('./handler/mask');
 
 let customHeaders = {}
 
@@ -31,8 +34,12 @@ const instanceConfig = {
   headers: { ...headers, ...customHeaders }
 }
 
-if (!!core.getInput('httpsCA')) {
-  instanceConfig.httpsAgent = new https.Agent({ ca: core.getInput('httpsCA') })
+if (!!core.getInput('httpsCA') || !!core.getInput('httpsCert')) {
+  instanceConfig.httpsAgent = new https.Agent({ 
+    ca: core.getInput('httpsCA') || undefined,
+    cert: core.getInput('httpsCert') || undefined,
+    key: core.getInput('httpsKey') || undefined
+  })
 }
 
 if (!!core.getInput('username') || !!core.getInput('password')) {
@@ -69,8 +76,15 @@ if (typeof ignoreStatusCodes === 'string' && ignoreStatusCodes.length > 0) {
   ignoredCodes = ignoreStatusCodes.split(',').map(statusCode => parseInt(statusCode.trim()))
 }
 
-const handler = [];
 const actions = new GithubActions();
+
+const handler = [];
+
+if (core.getBooleanInput('maskResponse')) {
+  handler.push(createMaskHandler(actions))
+}
+
+handler.push(createOutputHandler(actions))
 
 if (!!responseFile) {
   handler.push(createPersistHandler(responseFile, actions))
@@ -85,7 +99,7 @@ const options = {
 }
 
 request({ data, method, instanceConfig, files, file, actions, options }).then(response => {
-  if (typeof response == 'object') {
+  if (response && typeof response == 'object') {
     handler.forEach(h => h(response))
   }
 })
