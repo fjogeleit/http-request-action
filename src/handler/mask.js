@@ -9,13 +9,7 @@ const { GithubActions } = require('../githubActions');
  * @returns {(response: axios.AxiosResponse) => void}
  */
 const createMaskHandler = (actions) => (response) => {
-    let data = response.data
-
-    if (typeof data == 'object') {
-        data = JSON.stringify(data)
-    }
-
-    actions.setSecret(data)
+    actions.setSecret(JSON.stringify(response.data))
 }
 
 module.exports = { createMaskHandler }

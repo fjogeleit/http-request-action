@@ -9,7 +9,7 @@ const { GithubActions } = require('../githubActions');
  * @returns {(response: axios.AxiosResponse) => void}
  */
 const createOutputHandler  = (actions) => (response) => {
-    actions.setOutput('response', response.data)
+    actions.setOutput('response', JSON.stringify(response.data))
     actions.setOutput('headers', response.headers)
 }
 

@@ -26612,13 +26612,7 @@ const { GithubActions } = __nccwpck_require__(8169);
  * @returns {(response: axios.AxiosResponse) => void}
  */
 const createMaskHandler = (actions) => (response) => {
-    let data = response.data
-
-    if (typeof data == 'object') {
-        data = JSON.stringify(data)
-    }
-
-    actions.setSecret(data)
+    actions.setSecret(JSON.stringify(response.data))
 }
 
 module.exports = { createMaskHandler }
@@ -26640,7 +26634,7 @@ const { GithubActions } = __nccwpck_require__(8169);
  * @returns {(response: axios.AxiosResponse) => void}
  */
 const createOutputHandler  = (actions) => (response) => {
-    actions.setOutput('response', response.data)
+    actions.setOutput('response', JSON.stringify(response.data))
     actions.setOutput('headers', response.headers)
 }
 
