@@ -45,7 +45,7 @@ jobs:
 |httpsCert| Client Certificate as string ||
 |httpsKey| Client Certificate Key as string ||
 |responseFile| Persist the response data to the specified file path ||
-|markResponse| If set to true, the response will be masked in the logs of the action |'false'|
+|maskResponse| If set to true, the response will be masked in the logs of the action |'false'|
 |retry| optional amount of retries if the request is failing, does not retry if the status code is ignored ||
 |retryWait| time between each retry in millseconds | 3000 |
 
