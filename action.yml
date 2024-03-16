@@ -29,7 +29,7 @@ inputs:
         description: 'Auth Password'
         required: false
     timeout:
-        description: 'Request Timeout in Sec'
+        description: 'Request Timeout in milliseconds'
         required: false
         default: '5000'
     bearerToken:
