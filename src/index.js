@@ -58,7 +58,7 @@ if (!!core.getInput('retry')) {
 
 let retryWait = 3000
 if (!!core.getInput('retryWait')) {
-  retry = parseInt(core.getInput('retryWait'))
+  retryWait = parseInt(core.getInput('retryWait'))
 }
 
 const data = core.getInput('data') || '{}';
