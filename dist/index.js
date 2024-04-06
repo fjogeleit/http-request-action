@@ -27232,7 +27232,7 @@ const retry = async (callback, options) => {
       lastErr = err;
     }
 
-    if (i < options.retries) {
+    if (i < options.retry) {
       options.actions.warning(`#${i + 1} request failed: ${err}`);
       await sleep(options.sleep);
     }
@@ -27356,10 +27356,10 @@ const request = async({ method, instanceConfig, data, files, file, actions, opti
       } catch(error) {
         if (error.response && options.ignoredCodes.includes(error.response.status)) {
           actions.warning(`ignored status code: ${JSON.stringify({ code: error.response.status, message: error.response.data })}`)
-          
-          return null
+
+          return error.response
         }
-        
+
         if (!error.response && error.request && options.preventFailureOnNoResponse) {
           actions.warning(`no response received: ${JSON.stringify(error)}`);
 
