@@ -48,6 +48,7 @@ jobs:
 |maskResponse| If set to true, the response will be masked in the logs of the action |'false'|
 |retry| optional amount of retries if the request is failing, does not retry if the status code is ignored ||
 |retryWait| time between each retry in millseconds | 3000 |
+|ignoreSsl| ignore ssl verify (rejectUnauthorized: false) | false |
 
 ### Response
 
