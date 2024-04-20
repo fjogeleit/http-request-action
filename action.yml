@@ -69,6 +69,9 @@ inputs:
     retryWait:
         description: 'wait time between retries in milliseconds'
         required: false
+    ignoreSsl:
+        description: 'ignore ssl verify (rejectUnauthorized: false)'
+        default: 'false'
 outputs:
     response:
         description: 'HTTP Response Content'

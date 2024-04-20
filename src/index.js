@@ -29,6 +29,9 @@ if (!!core.getInput('bearerToken')) {
 
 /** @type {axios.AxiosRequestConfig} */
 const instanceConfig = {
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: core.getInput('ignoreSsl') !== 'true',
+  }),
   baseURL: core.getInput('url', { required: true }),
   timeout: parseInt(core.getInput('timeout') || 5000, 10),
   headers: { ...headers, ...customHeaders }
