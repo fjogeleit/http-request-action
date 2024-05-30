@@ -77,6 +77,8 @@ outputs:
         description: 'HTTP Response Content'
     headers:
         description: 'HTTP Response Headers'
+    status:
+        description: 'HTTP status message'
 runs:
     using: 'node20'
     main: 'dist/index.js'
