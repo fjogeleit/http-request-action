@@ -56,7 +56,7 @@ const retry = async (callback, options) => {
     }
 
     if (i < options.retry) {
-      options.actions.warning(`#${i + 1} request failed: ${err}`);
+      options.actions.warning(`#${i + 1} request failed: ${lastErr}`);
       await sleep(options.sleep);
     }
 

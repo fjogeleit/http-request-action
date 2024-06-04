@@ -17,8 +17,8 @@ const createPersistHandler = (filePath, actions) => (response) => {
         data = JSON.stringify(data)
     }
 
-    fs.writeFile(filePath, data, err => {
-        if (!err) {
+    fs.writeFile(filePath, data, error => {
+        if (!error) {
             actions.info(`response persisted successfully at ${filePath}`)
             return
         }

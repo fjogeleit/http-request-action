@@ -194,9 +194,9 @@ const updateConfigForFile = (instanceConfig, filePath, actions) => {
  * @returns {Promise<number>}
  */
 const contentLength = (formData) => new Promise((resolve, reject) => {
-  formData.getLength((err, length) => {
-    if (err) {
-      reject (err)
+  formData.getLength((error, length) => {
+    if (error) {
+      reject(error)
       return
     }
 

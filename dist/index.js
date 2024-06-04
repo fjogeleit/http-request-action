@@ -27378,8 +27378,8 @@ const createPersistHandler = (filePath, actions) => (response) => {
         data = JSON.stringify(data)
     }
 
-    fs.writeFile(filePath, data, err => {
-        if (!err) {
+    fs.writeFile(filePath, data, error => {
+        if (!error) {
             actions.info(`response persisted successfully at ${filePath}`)
             return
         }
@@ -27454,7 +27454,7 @@ const retry = async (callback, options) => {
     }
 
     if (i < options.retry) {
-      options.actions.warning(`#${i + 1} request failed: ${err}`);
+      options.actions.warning(`#${i + 1} request failed: ${lastErr}`);
       await sleep(options.sleep);
     }
 
@@ -27677,9 +27677,9 @@ const updateConfigForFile = (instanceConfig, filePath, actions) => {
  * @returns {Promise<number>}
  */
 const contentLength = (formData) => new Promise((resolve, reject) => {
-  formData.getLength((err, length) => {
-    if (err) {
-      reject (err)
+  formData.getLength((error, length) => {
+    if (error) {
+      reject(error)
       return
     }
 
