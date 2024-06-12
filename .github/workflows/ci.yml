@@ -123,21 +123,31 @@ jobs:
       
       - name: Create Test File
         run: |
-          echo "test" > testfile.txt
+          echo "test" > testfile1.txt
+          echo "test" > testfile2.txt
+
       - name: Request Postman Echo POST Multipart
         uses: ./
         with:
           url: 'https://postman-echo.com/post'
           method: 'POST'
           data: '{ "key": "value" }'
-          files: '{ "file": "${{ github.workspace }}/testfile.txt" }'
+          files: '{ "file": "${{ github.workspace }}/testfile1.txt" }'
+
+      - name: Request Postman Echo POST Multipart File Array
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          method: 'POST'
+          data: '{ "key": "value" }'
+          files: '{ "file": ["${{ github.workspace }}/testfile1.txt", "${{ github.workspace }}/testfile2.txt"] }'
 
       - name: Request Postman Echo POST and persist response
         uses: ./
         with:
           url: 'https://postman-echo.com/post'
           method: 'POST'
-          file: "${{ github.workspace }}/testfile.txt"
+          file: "${{ github.workspace }}/testfile1.txt"
           responseFile: "${{ github.workspace }}/response.json"
       - name: Output responseFile
         run: |
@@ -148,14 +158,14 @@ jobs:
         with:
           url: 'https://postman-echo.com/post'
           method: 'POST'
-          files: '{ "file": "${{ github.workspace }}/testfile.txt" }'
+          files: '{ "file": "${{ github.workspace }}/testfile1.txt" }'
 
       - name: Request Postman Echo POST single file
         uses: ./
         with:
           url: 'https://postman-echo.com/post'
           method: 'POST'
-          file: "${{ github.workspace }}/testfile.txt"
+          file: "${{ github.workspace }}/testfile1.txt"
 
       - name: Request Postman Echo POST URLEncoded string data
         uses: ./
