@@ -44,6 +44,31 @@ jobs:
           actual: ${{ steps.execution.outputs.status }}
           comparison: exact
 
+  test-method-post-on-existing-url-with-unescaped-newline:
+    name: "IT Test - Request Postman Echo POST with Unescaped Newline"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Given the gh-action is used with only mandatory fields
+        id: execution
+        uses: ./
+        with:
+          url: "https://postman-echo.com/post"
+          method: 'POST'
+          escapeData: 'true'
+          data: >-
+            {
+              "key":"multi line\ntest
+              text"
+            }
+
+      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+        name: Then outputs.status value must be 200 as this URL exists
+        with:
+          expected: '200'
+          actual: ${{ steps.execution.outputs.status }}
+          comparison: exact
+
   it-tests:
     name: "All IT Tests have to pass"
     runs-on: ubuntu-latest
@@ -52,6 +77,7 @@ jobs:
       # Add your tests here so that they prevent the merge of broken changes
       - test-method-get-on-existing-url
       - test-method-post-on-existing-url
+      - test-method-post-on-existing-url-with-unescaped-newline
     steps:
       - uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
         with:
