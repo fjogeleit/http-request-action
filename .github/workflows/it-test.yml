@@ -158,14 +158,20 @@ jobs:
           file: "${{ github.workspace }}/testfile2.txt"
           responseFile: "${{ github.workspace }}/response.json"
 
+      - name: Output responseFile
+        id: execution-response-file-output
+        run: |
+          response_content = $(cat "${{ github.workspace }}/response.json")
+          echo RESPONSE_CONTENT=$response_content
+          echo $RESPONSE_CONTENT
+
       - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
         name: Then outputs.status value must be 200 as this URL exists
         with:
           expected: '200'
-          actual: ${{ env.RESPONSE_CONTENT }}
+          actual: ${{ steps.execution-response-file-output.response_content }}
           comparison: exact
-        env:
-          RESPONSE_CONTENT: cat "${{ github.workspace }}/response.json"
+
 
 
   it-tests:
