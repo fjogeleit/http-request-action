@@ -161,9 +161,7 @@ jobs:
       - name: Output responseFile
         id: execution-response-file-output
         run: |
-          response_content = $(cat "${{ github.workspace }}/response.json")
-          echo RESPONSE_CONTENT=$response_content
-          echo $RESPONSE_CONTENT
+          echo "response_content=$(cat ${{ github.workspace }}/response.json)" >> $GITHUB_OUTPUT
 
       - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
         name: Then outputs.status value must be 200 as this URL exists
