@@ -14,11 +14,11 @@ jobs:
         id: test-data
         uses: ./
         with:
-          url: "https://github.com/"
+          url: "https://postman-echo.com/get"
       - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
         name: Then outputs.status value must be 200 as this URL exists
         with:
-          expected: 0
+          expected: '200'
           actual: ${{ steps.test-data.outputs.status }}
           comparison: exact
 
