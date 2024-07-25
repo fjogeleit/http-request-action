@@ -24,9 +24,9 @@ jobs:
       - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
         name: Then outputs.headers value must be <>
         with:
-          expected: '200'
+          expected: '"content-type":"application/json; charset=utf-8"'
           actual: ${{ steps.execution.outputs.headers }}
-          comparison: exact
+          comparison: contains
       - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
         name: Then outputs.response value must be <TBD>
         with:
