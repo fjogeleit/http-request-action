@@ -166,10 +166,15 @@ jobs:
       - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
         name: Then outputs.status value must be 200 as this URL exists
         with:
-          expected: '200'
+          expected: '{"args":{},"data":"test\n","files":{},"form":{},"headers":{"host":"postman-echo.com",'
           actual: ${{ steps.execution-response-file.outputs.response_content }}
-          comparison: exact
-
+          comparison: contains
+      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+        name: Then outputs.status value must be 200 as this URL exists
+        with:
+          expected: '"accept":"application/json, text/plain, */*","content-type":"application/json","user-agent"'
+          actual: ${{ steps.execution-response-file.outputs.response_content }}
+          comparison: contains
 
 
   it-tests:
