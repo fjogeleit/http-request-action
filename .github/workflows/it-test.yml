@@ -141,6 +141,32 @@ jobs:
           actual: ${{ steps.execution.outputs.status }}
           comparison: exact
 
+  test-input-responseFile:
+    name: "IT Test - Request Postman Echo POST and persist response"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Create Test File
+        run: |
+          echo "test" > testfile2.txt
+      - name: Given the gh-action is used with only mandatory fields
+        id: execution
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          method: 'POST'
+          file: "${{ github.workspace }}/testfile2.txt"
+          responseFile: "${{ github.workspace }}/response.json"
+
+      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+        name: Then outputs.status value must be 200 as this URL exists
+        with:
+          expected: '200'
+          actual: ${{ env.RESPONSE_CONTENT }}
+          comparison: exact
+        env:
+          RESPONSE_CONTENT: cat "${{ github.workspace }}/response.json"
+
 
   it-tests:
     name: "All IT Tests have to pass"
@@ -154,6 +180,7 @@ jobs:
       - test-basic-auth
       - test-input-ignore-failure-code-404
       - test-input-files
+      - test-input-responseFile
     steps:
       - uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
         with:
