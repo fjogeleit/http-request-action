@@ -159,7 +159,7 @@ jobs:
           responseFile: "${{ github.workspace }}/response.json"
 
       - name: Output responseFile
-        id: execution-response-file-output
+        id: execution-response-file
         run: |
           echo "response_content=$(cat ${{ github.workspace }}/response.json)" >> $GITHUB_OUTPUT
 
@@ -167,7 +167,7 @@ jobs:
         name: Then outputs.status value must be 200 as this URL exists
         with:
           expected: '200'
-          actual: ${{ steps.execution-response-file-output.response_content }}
+          actual: ${{ steps.execution-response-file.outputs.response_content }}
           comparison: exact
 
 
