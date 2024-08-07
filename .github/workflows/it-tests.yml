@@ -312,7 +312,7 @@ jobs:
           actual: ${{ steps.execution.outputs.status }}
           comparison: exact
 
-  test-dinput-files-arrays:
+  test-input-files-arrays:
     name: "IT Test - Request Postman Echo POST Multipart (multiple files)"
     runs-on: ubuntu-latest
     steps:
@@ -364,7 +364,7 @@ jobs:
       - test-input-responseFile
       - test-input-files-without-data
       - test-input-file-with-single-file
-      - test-input-files-array
+      - test-input-files-arrays
       - test-input-data-with-url-encoded-string
       - test-input-data-with-url-encoded-json-data
       - test-delete-http-method
