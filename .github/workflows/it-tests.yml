@@ -329,7 +329,7 @@ jobs:
           method: 'POST'
           data: '{"key":"value"}'
           files: '{ "file": ["${{ github.workspace }}/test-upload-file1.txt", "${{ github.workspace }}/test-upload-file2.txt"] }'
-          responseFile: "${{ github.workspace }}/response-multiple-files.json"aaaa
+          responseFile: "${{ github.workspace }}/response-multiple-files.json"
       - name: Output responseFile
         id: execution-response-file
         run: |
