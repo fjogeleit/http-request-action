@@ -312,6 +312,42 @@ jobs:
           actual: ${{ steps.execution.outputs.status }}
           comparison: exact
 
+  test-dinput-files-arrays:
+    name: "IT Test - Request Postman Echo POST Multipart (multiple files)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Create Test Files
+        run: |
+          echo "test upload file #1" > test-upload-file1.txt
+          echo "test upload file #2" > test-upload-file2.txt
+      - name: Given the gh-action is used with multiple files
+        id: execution
+        uses: ./
+        with:
+          url: 'https://postman-echo.com/post'
+          method: 'POST'
+          data: '{"key":"value"}'
+          files: '{ "file": ["${{ github.workspace }}/test-upload-file1.txt", "${{ github.workspace }}/test-upload-file2.txt"] }'
+          responseFile: "${{ github.workspace }}/response-multiple-files.json"aaaa
+      - name: Output responseFile
+        id: execution-response-file
+        run: |
+          echo "response_content=$(cat ${{ github.workspace }}/response-multiple-files.json)" >> $GITHUB_OUTPUT
+
+      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+        name: Then outputs.response_content value must include
+        with:
+          expected: '{"args":{},"data":"test\n","files":{},"form":{},"headers":{"host":"postman-echo.com",'
+          actual: ${{ steps.execution-response-file.outputs.response_content }}
+          comparison: contains
+      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+        name: Then outputs.response_content value must include
+        with:
+          expected: '"accept":"application/json, text/plain, */*","content-type":"application/json","user-agent"'
+          actual: ${{ steps.execution-response-file.outputs.response_content }}
+          comparison: contains
+
   it-tests:
     name: "All IT Tests have to pass"
     runs-on: ubuntu-latest
@@ -328,6 +364,7 @@ jobs:
       - test-input-responseFile
       - test-input-files-without-data
       - test-input-file-with-single-file
+      - test-input-files-array
       - test-input-data-with-url-encoded-string
       - test-input-data-with-url-encoded-json-data
       - test-delete-http-method
