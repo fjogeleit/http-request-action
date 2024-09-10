@@ -1,6 +1,6 @@
 {
   "name": "http-request-action",
-  "version": "1.14.2",
+  "version": "1.16.2",
   "description": "",
   "main": "src/index.js",
   "private": false,
