@@ -94,10 +94,10 @@ const request = async({ method, instanceConfig, data, files, file, actions, opti
       } catch(error) {
         if (error.response && options.ignoredCodes.includes(error.response.status)) {
           actions.warning(`ignored status code: ${JSON.stringify({ code: error.response.status, message: error.response.data })}`)
-          
-          return null
+
+          return error.response
         }
-        
+
         if (!error.response && error.request && options.preventFailureOnNoResponse) {
           actions.warning(`no response received: ${JSON.stringify(error)}`);
 
@@ -194,9 +194,9 @@ const updateConfigForFile = (instanceConfig, filePath, actions) => {
  * @returns {Promise<number>}
  */
 const contentLength = (formData) => new Promise((resolve, reject) => {
-  formData.getLength((err, length) => {
-    if (err) {
-      reject (err)
+  formData.getLength((error, length) => {
+    if (error) {
+      reject(error)
       return
     }
 

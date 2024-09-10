@@ -29,7 +29,7 @@ inputs:
         description: 'Auth Password'
         required: false
     timeout:
-        description: 'Request Timeout in Sec'
+        description: 'Request Timeout in milliseconds'
         required: false
         default: '5000'
     bearerToken:
@@ -69,11 +69,16 @@ inputs:
     retryWait:
         description: 'wait time between retries in milliseconds'
         required: false
+    ignoreSsl:
+        description: 'ignore ssl verify (rejectUnauthorized: false)'
+        default: 'false'
 outputs:
     response:
         description: 'HTTP Response Content'
     headers:
         description: 'HTTP Response Headers'
+    status:
+        description: 'HTTP status message'
 runs:
-    using: 'node16'
+    using: 'node20'
     main: 'dist/index.js'

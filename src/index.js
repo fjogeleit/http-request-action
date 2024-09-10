@@ -29,6 +29,9 @@ if (!!core.getInput('bearerToken')) {
 
 /** @type {axios.AxiosRequestConfig} */
 const instanceConfig = {
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: core.getInput('ignoreSsl') !== 'true',
+  }),
   baseURL: core.getInput('url', { required: true }),
   timeout: parseInt(core.getInput('timeout') || 5000, 10),
   headers: { ...headers, ...customHeaders }
@@ -58,7 +61,7 @@ if (!!core.getInput('retry')) {
 
 let retryWait = 3000
 if (!!core.getInput('retryWait')) {
-  retry = parseInt(core.getInput('retryWait'))
+  retryWait = parseInt(core.getInput('retryWait'))
 }
 
 const data = core.getInput('data') || '{}';

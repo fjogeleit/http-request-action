@@ -45,9 +45,10 @@ jobs:
 |httpsCert| Client Certificate as string ||
 |httpsKey| Client Certificate Key as string ||
 |responseFile| Persist the response data to the specified file path ||
-|markResponse| If set to true, the response will be masked in the logs of the action |'false'|
+|maskResponse| If set to true, the response will be masked in the logs of the action |'false'|
 |retry| optional amount of retries if the request is failing, does not retry if the status code is ignored ||
 |retryWait| time between each retry in millseconds | 3000 |
+|ignoreSsl| ignore ssl verify (rejectUnauthorized: false) | false |
 
 ### Response
 
@@ -55,6 +56,7 @@ jobs:
 |---|---|
 `response` | Response as JSON String
 `headers` | Headers
+`status` | HTTP status message
 
 To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`. You can also access specific field from the response data using [fromJson()](https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson) expression.
 
@@ -69,6 +71,7 @@ steps:
     run: |
       echo ${{ steps.myRequest.outputs.response }}
       echo ${{ steps.myRequest.outputs.headers }}
+      echo ${{ steps.myRequest.outputs.status }}
       echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
 ```
 
