@@ -53,9 +53,15 @@ const request = async({ method, instanceConfig, data, files, file, actions, opti
       if (Object.keys(filesJson).length > 0) {
         try {
           data = convertToFormData(dataJson, filesJson)
-          instanceConfig = await updateConfig(instanceConfig, data, actions)
         } catch(error) {
           actions.setFailed(JSON.stringify({ message: `Unable to convert Data and Files into FormData: ${error.message}`, data: dataJson, files: filesJson }))
+          return
+        }
+
+        try {
+          instanceConfig = await updateConfig(instanceConfig, data)
+        } catch(error) {
+          actions.setFailed(JSON.stringify({ message: `Unable to read Content-Length: ${error.message}` }))
           return
         }
       }
@@ -139,12 +145,10 @@ const request = async({ method, instanceConfig, data, files, file, actions, opti
 /**
  * @param {{ baseURL: string; timeout: number; headers: { [name: string]: string } }} instanceConfig
  * @param {FormData} formData
- * @param {*} actions
  *
  * @returns {Promise<{ baseURL: string; timeout: number; headers: { [name: string]: string } }>}
  */
-const updateConfig = async (instanceConfig, formData, actions) => {
-  try {
+const updateConfig = async (instanceConfig, formData) => {
     const formHeaders = formData.getHeaders()
     const contentType = formHeaders['content-type']
 
@@ -159,9 +163,6 @@ const updateConfig = async (instanceConfig, formData, actions) => {
         'Content-Type': contentType
       }
     }
-  } catch(error) {
-    actions.setFailed(JSON.stringify({ message: `Unable to read Content-Length: ${error.message}` }))
-  }
 }
 
 /**
