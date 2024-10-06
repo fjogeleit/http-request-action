@@ -160,7 +160,7 @@ const updateConfig = async (instanceConfig, formData, actions) => {
       }
     }
   } catch(error) {
-    actions.setFailed({ message: `Unable to read Content-Length: ${error.message}`, data, files })
+    actions.setFailed(JSON.stringify({ message: `Unable to read Content-Length: ${error.message}` }))
   }
 }
 

@@ -27445,7 +27445,7 @@ const convertToJSON = (value) => {
  *
  * @returns {FormData}
  */
-const convertToFormData = (data, files, convertPaths) => {
+const convertToFormData = (data, files) => {
   const formData = new FormData();
 
   for (const [key, value] of Object.entries(data)) {
@@ -27666,7 +27666,7 @@ const updateConfig = async (instanceConfig, formData, actions) => {
       }
     }
   } catch(error) {
-    actions.setFailed({ message: `Unable to read Content-Length: ${error.message}`, data, files })
+    actions.setFailed(JSON.stringify({ message: `Unable to read Content-Length: ${error.message}` }))
   }
 }
 

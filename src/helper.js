@@ -24,7 +24,7 @@ const convertToJSON = (value) => {
  *
  * @returns {FormData}
  */
-const convertToFormData = (data, files, convertPaths) => {
+const convertToFormData = (data, files) => {
   const formData = new FormData();
 
   for (const [key, value] of Object.entries(data)) {
