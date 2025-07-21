@@ -21,7 +21,7 @@
   "devDependencies": {
     "@vercel/ncc": "^0.38.3",
     "axios": "^1.10",
-    "form-data": "^4.0.3",
+    "form-data": "^4.0.4",
     "yargs": "^18.0.0"
   },
   "dependencies": {
