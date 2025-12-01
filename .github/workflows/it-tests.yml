@@ -9,7 +9,7 @@ jobs:
     name: "IT Test - Request Postman Echo GET"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Given the gh-action is used with GET and a valid URL
         id: execution
         uses: ./
@@ -28,7 +28,7 @@ jobs:
     name: "IT Test - Request Postman Echo POST"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Given the gh-action is used with POST using valid data
         id: execution
         uses: ./
@@ -48,7 +48,7 @@ jobs:
     name: "IT Test - Request Postman Echo POST with Unescaped Newline"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Given the gh-action is used with POST using unescaped new line within data
         id: execution
         uses: ./
@@ -73,7 +73,7 @@ jobs:
     name: "IT Test - Request Postman Echo BasicAuth"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Given the gh-action is used with valid BasicAuth parameters
         id: execution
         uses: ./
@@ -94,7 +94,7 @@ jobs:
     name: "IT Test - Request Postman Echo with 404 Response and ignore failure code"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Given the gh-action is used with unknown URL and ignoreStatusCode 404 for it
         id: execution
         uses: ./
@@ -121,7 +121,7 @@ jobs:
     name: "IT Test - Request Postman Echo with 404 Response and ignore failure code"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Given the gh-action is used with unknown URL and ignore status codes 401,404
         id: execution
         uses: ./
@@ -148,7 +148,7 @@ jobs:
     name: "IT Test - Request Postman Echo POST Multipart"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Create Test File
         run: |
           echo "test" > testfile.txt
@@ -172,7 +172,7 @@ jobs:
     name: "IT Test - Request Postman Echo POST and persist response"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Create Test File
         run: |
           echo "test" > testfile2.txt
@@ -207,7 +207,7 @@ jobs:
     name: "IT Test - Request Postman Echo POST Multipart without data"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Create Test File
         run: |
           echo "test" > testfile3.txt
@@ -230,7 +230,7 @@ jobs:
     name: "IT Test - Request Postman Echo POST single file"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Create Test File
         run: |
           echo "test" > testfile4.txt
@@ -253,7 +253,7 @@ jobs:
     name: "IT Test - Request Postman Echo POST URLEncoded string data"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Given the gh-action is used with data form url encoded
         id: execution
         uses: ./
@@ -274,7 +274,7 @@ jobs:
     name: "IT Test - Request Postman Echo POST URLEncoded json data"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Given the gh-action is used with json data
         id: execution
         uses: ./
@@ -295,7 +295,7 @@ jobs:
     name: "IT Test - Request Postman Echo DELETE"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v4.1.7
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.7
       - name: Given the gh-action is used with method DELETE
         id: execution
         uses: ./
