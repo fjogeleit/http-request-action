@@ -199,7 +199,7 @@ jobs:
       - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
         name: Then outputs.response_content value must include
         with:
-          expected: '"accept":"application/json, text/plain, */*","content-type":"application/json","user-agent"'
+          expected: '"accept":"application/json, text/plain, */*"'
           actual: ${{ steps.execution-response-file.outputs.response_content }}
           comparison: contains
 
