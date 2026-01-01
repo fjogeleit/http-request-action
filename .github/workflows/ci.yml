@@ -26,7 +26,7 @@ jobs:
           echo "branch=$branch" >> $GITHUB_OUTPUT
         fi
     - name: checkout repo
-      uses: actions/checkout@v6
+      uses: actions/checkout@v6.0.1
       with:
         ref: ${{ steps.ref.outputs.branch }}
     - uses: actions/setup-node@v6
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: checkout repo
-      uses: actions/checkout@v6
+      uses: actions/checkout@v6.0.1
       with:
         persist-credentials: false
     - uses: actions/setup-node@v6
