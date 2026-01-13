@@ -25,7 +25,7 @@
     "yargs": "^18.0.0"
   },
   "dependencies": {
-    "@actions/core": "^2.0.1"
+    "@actions/core": "^2.0.2"
   },
   "engines": {
     "node": ">=16.0.0"
