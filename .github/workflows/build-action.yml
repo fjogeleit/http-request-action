@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: checkout repo
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
-        ref: ${{ inputs.ref }}
+        ref: ${{ github.event.inputs.ref }}
     - uses: actions/setup-node@v6
       with:
-        node-version: '16'
+        node-version-file: '.tool-versions'
     - name: Install dependencies
       run: |
         npm ci
