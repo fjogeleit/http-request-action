@@ -42,25 +42,3 @@ jobs:
           git commit -m "Update dist"
           git push origin HEAD:${{ steps.ref.outputs.branch }}
         fi
-  integrity:
-    if: >
-      !failure() &&
-      !cancelled()
-    needs:
-      - build
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout repo
-      uses: actions/checkout@v6.0.2
-      with:
-        persist-credentials: false
-    - uses: actions/setup-node@v6
-      with:
-        node-version-file: '.tool-versions'
-    - name: Build action
-      run: |
-        npm ci
-        npm run build
-    - name: Repository Integrity Check
-      run: |
-        git diff --quiet dist
