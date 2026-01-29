@@ -1,0 +1,31 @@
+---
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  create:
+    name: Create
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+          ref: "${{ github.ref }}"
+      - name: Create release
+        uses: elgohr/Github-Release-Action@c5ea99036abb741a89f8bf1f2cd7fba845e3313a # v5
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          title: ${{ github.ref_name }}
+          tag: ${{ github.ref_name }}
+      - name: Bump tags
+        uses: fischerscode/tagger@5ca3fa63ce3003fb7183cae547644b29f3b632be # v0.2.0
+        with:
+          prefix: v
