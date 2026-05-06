@@ -56,7 +56,8 @@ jobs:
 |---|---|
 `response` | Response as JSON String
 `headers` | Headers
-`status` | HTTP status message
+`status` | HTTP Response Status Code
+`requestError` | On request failure, a JSON string with fields: `name`, `message`, `code`, `status`
 
 To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`. You can also access specific field from the response data using [fromJson()](https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson) expression.
 
