@@ -16,6 +16,6 @@ git push origin "v1.2.3"
 
 1. Go to the [Releases page](https://github.com/fjogeleit/http-request-action/releases)
 and select the latest release that was just created.
-2. Select "Edit" button.
+2. Click the **Edit** button.
 3. Select "Publish this Action to the GitHub Marketplace" checkbox.
-4. Select "Update release" button.
+4. Click the **Update release** button.
