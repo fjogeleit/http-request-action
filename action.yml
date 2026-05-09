@@ -21,7 +21,7 @@ inputs:
         required: false
         default: '{}'
     file:
-        description: 'A single absolute file path, sent as application/octet-stream. Only used when data and files are both empty.'
+        description: 'A single absolute file path. Only used when data and files are both empty.'
         required: false
     username:
         description: 'Auth Username'
