@@ -2,7 +2,7 @@
 
 **Create HTTP Requests from GitHub Actions.** This action allows GitHub events to engage with tools like Ansible AWX that use HTTP APIs.
 
-### Example
+## Example
 ```yaml
 jobs:
   deployment:
@@ -19,44 +19,45 @@ jobs:
         data: '{"key_1": "value_1", "key_2": "value_2"}'
 ```
 
-### Versioning
+## Versioning
 
 `master` branch is deprecated. Please use `main` or `v1` to get the latest version of this action. It is recommended to use a fixed version.
 
-### Request Configuration
+## Request Configuration
 
-|Argument|  Description  |  Default  |
-|--------|---------------|-----------|
-|url     | Request URL   | _required_ Field |
-|method  | Request Method| POST |
-|contentType  | Request ContentType| application/json |
-|data    | Request Body Content:<br>- text content like JSON or XML<br>- key=value pairs separated by '&' or JSON data and contentType: application/x-www-form-urlencoded<br><br>only for POST / PUT / PATCH Requests | '{}' |
-|files    | Map of key / absolute file paths send as multipart/form-data request to the API, if set the contentType is set to multipart/form-data, values provided by data will be added as additional FormData values, nested objects are not supported. **Example provided in the _test_ Workflow of this Action** | '{}' |
-|file    | Single absolute file path send as `application/octet-stream` request to the API, if set the contentType is set to `application/octet-stream`. This input will be ignored if either `data` or `files` input is present. **Example provided in the _test_ Workflow of this Action** ||
-|timeout| Request Timeout in ms | 5000 (5s) |
-|username| Username for Basic Auth ||
-|password| Password for Basic Auth ||
-|bearerToken| Bearer Authentication Token (without Bearer Prefix) ||
-|customHeaders| Additional header values as JSON string, keys in this object overwrite default headers like Content-Type |'{}'|
-|escapeData| Escape newlines in data string content. Use 'true' (string) as value to enable it ||
-|preventFailureOnNoResponse| Prevent this Action to fail if the request respond without an response. Use 'true' (string) as value to enable it ||
-|ignoreStatusCodes| Prevent this Action to fail if the request respond with one of the configured Status Codes. Example: '404,401' ||
-|httpsCA| Certificate authority as string in PEM format ||
-|httpsCert| Client Certificate as string ||
-|httpsKey| Client Certificate Key as string ||
-|responseFile| Persist the response data to the specified file path ||
-|maskResponse| If set to true, the response will be masked in the logs of the action |'false'|
-|retry| optional amount of retries if the request is failing, does not retry if the status code is ignored ||
-|retryWait| time between each retry in millseconds | 3000 |
-|ignoreSsl| ignore ssl verify (rejectUnauthorized: false) | false |
+| Argument                   | Description                                                                                                                                                                                                                                                                                                      | Default          |
+|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
+| url                        | Request URL                                                                                                                                                                                                                                                                                                      | _required_ Field |
+| method                     | Request Method                                                                                                                                                                                                                                                                                                   | POST             |
+| contentType                | Request Content-Type                                                                                                                                                                                                                                                                                             | application/json |
+| data                       | Request body content:<br>- Text content such as JSON or XML<br>- key=value pairs separated by `&`, or JSON data with `contentType: application/x-www-form-urlencoded`<br><br>Only for POST, PUT, and PATCH requests                                                                                              | '{}'             |
+| files                      | Map of keys to absolute file paths, sent as a multipart/form-data request to the API. If set, `contentType` is set to `multipart/form-data`; values provided by `data` will be added as additional FormData values. Nested objects are not supported. **Example provided in the _test_ Workflow of this Action** | '{}'             |
+| file                       | Single absolute file path sent as an `application/octet-stream` request to the API. If set, `contentType` is set to `application/octet-stream`. This input is ignored if either `data` or `files` is present. **Example provided in the _test_ Workflow of this Action**                                         |                  |
+| timeout                    | Request Timeout in ms                                                                                                                                                                                                                                                                                            | 5000 (5s)        |
+| username                   | Username for Basic Auth                                                                                                                                                                                                                                                                                          |                  |
+| password                   | Password for Basic Auth                                                                                                                                                                                                                                                                                          |                  |
+| bearerToken                | Bearer authentication token (without the `Bearer` prefix)                                                                                                                                                                                                                                                        |                  |
+| customHeaders              | Additional header values as a JSON string. Keys in this object overwrite default headers such as `Content-Type`                                                                                                                                                                                                  | '{}'             |
+| escapeData                 | Escape newlines in data string content. Use `true` (string) to enable                                                                                                                                                                                                                                            |                  |
+| preventFailureOnNoResponse | Prevent this action from failing if the request responds without a response. Use `true` (string) to enable                                                                                                                                                                                                       |                  |
+| ignoreStatusCodes          | Prevent this action from failing if the request responds with one of the configured status codes. Example: `404,401`                                                                                                                                                                                             |                  |
+| httpsCA                    | Certificate authority as string in PEM format                                                                                                                                                                                                                                                                    |                  |
+| httpsCert                  | Client Certificate as string                                                                                                                                                                                                                                                                                     |                  |
+| httpsKey                   | Client Certificate Key as string                                                                                                                                                                                                                                                                                 |                  |
+| responseFile               | Persist the response data to the specified file path                                                                                                                                                                                                                                                             |                  |
+| maskResponse               | If set to `true`, the response will be masked in the action logs                                                                                                                                                                                                                                                 | 'false'          |
+| retry                      | Optional number of retries if the request fails; does not retry if the status code is ignored                                                                                                                                                                                                                    |                  |
+| retryWait                  | Time between each retry in milliseconds                                                                                                                                                                                                                                                                          | 3000             |
+| ignoreSsl                  | Ignore SSL verification (`rejectUnauthorized: false`)                                                                                                                                                                                                                                                            | false            |
 
-### Response
+## Response
 
-| Variable |  Description  |
-|---|---|
-`response` | Response as JSON String
-`headers` | Headers
-`status` | HTTP status message
+| Variable       | Description                                                                                                           |
+|----------------|-----------------------------------------------------------------------------------------------------------------------|
+| `response`     | Response body as a JSON string                                                                                        |
+| `headers`      | HTTP response headers as an object                                                                                    |
+| `status`       | HTTP status code (e.g. `200`, `404`)                                                                                  |
+| `requestError` | Set on request failure (Axios error). JSON string with fields `name`, `message`, `code`, and `status` (may be `null`) |
 
 To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`. You can also access specific field from the response data using [fromJson()](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#fromjson) expression.
 
@@ -75,7 +76,7 @@ steps:
       echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
 ```
 
-### Additional Information
+## Additional Information
 
 Additional information is available if debug logging is enabled:
 - Instance Configuration (Url / Timeout / Headers)
@@ -83,17 +84,17 @@ Additional information is available if debug logging is enabled:
 
 To [enable debug logging in GitHub Actions](https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging) create a secret `ACTIONS_RUNNER_DEBUG` with a value of `true`
 
-#### Local Usage
+### Local Usage
 
 * You can execute this tool locally with the provided CLI `bin/http-action`.
 
 ```bash
-bin/http-action --help                   
+bin/http-action --help
 Positionals:
   url  request URL                                                     [string]
 
-Optionen:
-      --help           helper text                                     [boolean]
+Options:
+      --help           show help                                       [boolean]
   -d, --data           request body data                               [string] [default: "{}"]
   -f, --files          request files, send as multipart/form-data      [string] [default: "{}"]
       --file           single file, send as application/octet-stream   [string]
