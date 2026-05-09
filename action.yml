@@ -86,7 +86,7 @@ outputs:
     status:
         description: 'HTTP Response Status Code'
     requestError:
-        description: 'On request failure, a JSON string with fields: name, message, code, status'
+        description: 'On Axios request errors, a JSON string with fields: name, message, code, status; status may be null when no response is available'
 runs:
     using: 'node24'
     main: 'dist/index.js'
