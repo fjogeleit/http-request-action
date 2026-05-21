@@ -11,16 +11,17 @@ inputs:
     contentType:
         description: 'Content Type'
         required: false
+        default: 'application/json'
     data:
         description: 'Request Body as JSON String'
         required: false
         default: '{}'
     files:
-        description: 'Map of absolute file paths as JSON String'
+        description: 'Multipart form-data file map as a JSON string, e.g. {"fieldName": "/absolute/path/to/file"}. Takes precedence over file when both are set.'
         required: false
         default: '{}'
     file:
-        description: 'A single absolute file path'
+        description: 'A single absolute file path. Only used when data and files are both empty.'
         required: false
     username:
         description: 'Auth Username'
@@ -36,17 +37,19 @@ inputs:
         description: 'Bearer Authentication Token'
         required: false
     customHeaders:
-        description: 'Custom HTTP Headers'
+        description: 'Custom HTTP Headers as a JSON object string, e.g. {"Header-Name": "value"}'
         required: false
     preventFailureOnNoResponse:
-        description: 'Prevent this Action to fail if the request respond without an response'
+        description: "Prevent this Action from failing if the request receives no response. Set to 'true' to enable."
         required: false
+        default: 'false'
     ignoreStatusCodes:
-        description: 'Prevent this Action to fail if the request respond with one of the configured StatusCodes'
+        description: 'Comma-separated list of HTTP status codes that will not cause the action to fail, e.g. "404,422"'
         required: false
     escapeData:
         description: 'Escape newlines in data string content'
         required: false
+        default: 'false'
     httpsCA:
         description: 'Certificate authority as string in PEM format'
         required: false
@@ -64,21 +67,26 @@ inputs:
         required: false
         default: 'false'
     retry:
-        description: 'optional amount of retries if the request fails'
+        description: 'Number of retries if the request fails'
         required: false
+        default: '0'
     retryWait:
-        description: 'wait time between retries in milliseconds'
+        description: 'Wait time between retries in milliseconds'
         required: false
+        default: '3000'
     ignoreSsl:
-        description: 'ignore ssl verify (rejectUnauthorized: false)'
+        description: 'Ignore SSL verification (rejectUnauthorized: false)'
+        required: false
         default: 'false'
 outputs:
     response:
-        description: 'HTTP Response Content'
+        description: 'HTTP Response Body as JSON string'
     headers:
         description: 'HTTP Response Headers'
     status:
-        description: 'HTTP status message'
+        description: 'HTTP Response Status Code'
+    requestError:
+        description: 'On Axios request errors, a JSON string with fields: name, message, code, status; status may be null when no response is available'
 runs:
     using: 'node24'
     main: 'dist/index.js'
