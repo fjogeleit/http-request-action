@@ -82,7 +82,7 @@ Additional information is available if debug logging is enabled:
 - Instance Configuration (Url / Timeout / Headers)
 - Request Data (Body / Auth / Method)
 
-To [enable debug logging in GitHub Actions](https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging) create a secret `ACTIONS_RUNNER_DEBUG` with a value of `true`
+To [enable debug logging in GitHub Actions](https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging), create a secret `ACTIONS_RUNNER_DEBUG` with a value of `true`.
 
 ### Local Usage
 
