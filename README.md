@@ -59,7 +59,7 @@ jobs:
 | `status`       | HTTP status code (e.g. `200`, `404`)                                                                                  |
 | `requestError` | Set on request failure (Axios error). JSON string with fields `name`, `message`, `code`, and `status` (may be `null`) |
 
-To display HTTP response data in the GitHub Actions log, give the request an `id` and access its `outputs`. You can also access a specific field from the response data using the [fromJson()](https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson) expression.
+To display HTTP response data in the GitHub Actions log give the request an `id` and access its `outputs`. You can also access specific field from the response data using [fromJson()](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#fromjson) expression.
 
 ```yaml
 steps:
@@ -82,7 +82,7 @@ Additional information is available if debug logging is enabled:
 - Instance Configuration (Url / Timeout / Headers)
 - Request Data (Body / Auth / Method)
 
-To [enable debug logging in GitHub Actions](https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging), create a secret `ACTIONS_RUNNER_DEBUG` with a value of `true`.
+To [enable debug logging in GitHub Actions](https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging), create a secret `ACTIONS_RUNNER_DEBUG` with a value of `true`.
 
 ### Local Usage
 
