@@ -21,7 +21,7 @@ jobs:
         branch="${{ github.event.ref || github.event.pull_request.head.ref }}"
         echo "branch=$branch" >> $GITHUB_OUTPUT
     - name: checkout repo
-      uses: actions/checkout@v6.0.2
+      uses: actions/checkout@v6.0.3
       with:
         ref: ${{ steps.ref.outputs.branch }}
     - uses: actions/setup-node@v6
