@@ -17,7 +17,7 @@ jobs:
           url: 'https://postman-echo.com/get'
           method: 'GET'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200
         with:
           expected: '200'
@@ -37,7 +37,7 @@ jobs:
           method: 'POST'
           data: '{ "key": "value" }'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200
         with:
           expected: '200'
@@ -62,7 +62,7 @@ jobs:
               text"
             }
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200
         with:
           expected: '200'
@@ -83,7 +83,7 @@ jobs:
           username: 'postman'
           password: 'password'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200 as this URL exists
         with:
           expected: '200'
@@ -103,14 +103,14 @@ jobs:
           method: 'GET'
           ignoreStatusCodes: '404'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must 404
         with:
           expected: '404'
           actual: ${{ steps.execution.outputs.status }}
           comparison: exact
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then the outcome value must be success as the error 404 is ignored
         with:
           expected: 'success'
@@ -130,14 +130,14 @@ jobs:
           method: 'GET'
           ignoreStatusCodes: '401,404'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 404
         with:
           expected: '404'
           actual: ${{ steps.execution.outputs.status }}
           comparison: exact
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then the outcome value must be success as the error 404 is ignored
         with:
           expected: 'success'
@@ -161,7 +161,7 @@ jobs:
           data: '{ "key": "value" }'
           files: '{ "file": "${{ github.workspace }}/testfile.txt" }'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200
         with:
           expected: '200'
@@ -190,13 +190,13 @@ jobs:
         run: |
           echo "response_content=$(cat ${{ github.workspace }}/response.json)" >> $GITHUB_OUTPUT
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.response_content value must include
         with:
           expected: '{"args":{},"data":"test\n","files":{},"form":{},"headers":{"host":"postman-echo.com",'
           actual: ${{ steps.execution-response-file.outputs.response_content }}
           comparison: contains
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.response_content value must include
         with:
           expected: '"accept":"application/json, text/plain, */*"'
@@ -219,7 +219,7 @@ jobs:
           method: 'POST'
           files: '{ "file": "${{ github.workspace }}/testfile3.txt" }'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200
         with:
           expected: '200'
@@ -242,7 +242,7 @@ jobs:
           method: 'POST'
           file: "${{ github.workspace }}/testfile4.txt"
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200
         with:
           expected: '200'
@@ -263,7 +263,7 @@ jobs:
           method: 'POST'
           data: 'key=value'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200
         with:
           expected: '200'
@@ -284,7 +284,7 @@ jobs:
           method: 'POST'
           data: '{"key":"value"}'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200
         with:
           expected: '200'
@@ -305,7 +305,7 @@ jobs:
           method: 'DELETE'
           data: '{"key":"value"}'
 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         name: Then outputs.status value must be 200
         with:
           expected: '200'
