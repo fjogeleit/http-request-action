@@ -3,7 +3,6 @@
 const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
-const url = require('url');
 const { GithubActions } = require('./githubActions');
 const { convertToJSON, convertToFormData, retry } = require('./helper');
 
@@ -21,8 +20,8 @@ const CONTENT_TYPE_URLENCODED = 'application/x-www-form-urlencoded'
  * @param {string} param0.data Request Body as string, default {}
  * @param {string} param0.files Map of Request Files (name: absolute path) as JSON String, default: {}
  * @param {string} param0.file Single request file (absolute path)
- * @param {GithubActions} param0.actions 
- * @param {{ 
+ * @param {GithubActions} param0.actions
+ * @param {{
  *  ignoredCodes: number[];
  *  preventFailureOnNoResponse: boolean,
  *  escapeData: boolean;
@@ -34,12 +33,12 @@ const CONTENT_TYPE_URLENCODED = 'application/x-www-form-urlencoded'
  */
 const request = async({ method, instanceConfig, data, files, file, actions, options }) => {
   actions.debug(`options: ${JSON.stringify(options)}`)
-  
+
   try {
     if (options.escapeData) {
-      data = data.replace(/"[^"]*"/g, (match) => { 
+      data = data.replace(/"[^"]*"/g, (match) => {
         return match.replace(/[\n\r]\s*/g, "\\n");
-      }); 
+      });
     }
 
     if (method === METHOD_GET) {
@@ -76,7 +75,7 @@ const request = async({ method, instanceConfig, data, files, file, actions, opti
     if (instanceConfig.headers[HEADER_CONTENT_TYPE] === CONTENT_TYPE_URLENCODED) {
       let dataJson = convertToJSON(data)
       if (typeof dataJson === 'object' && Object.keys(dataJson).length) {
-        data = (new url.URLSearchParams(dataJson)).toString();
+        data = (new URLSearchParams(dataJson)).toString();
       }
     }
 
@@ -88,7 +87,7 @@ const request = async({ method, instanceConfig, data, files, file, actions, opti
     }
 
     actions.debug('Instance Configuration: ' + JSON.stringify(instanceConfig))
-    
+
     /** @type {axios.AxiosInstance} */
     const instance = axios.create(instanceConfig);
 
@@ -154,10 +153,10 @@ const updateConfig = async (instanceConfig, formData) => {
 
     delete formHeaders['content-type']
 
-    return { 
-      ...instanceConfig, 
-      headers: { 
-        ...instanceConfig.headers, 
+    return {
+      ...instanceConfig,
+      headers: {
+        ...instanceConfig.headers,
         ...formHeaders,
         'Content-Length': await contentLength(formData),
         'Content-Type': contentType
